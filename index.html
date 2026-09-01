@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Developer Associate Study Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 w-full bg-slate-900/80 backdrop-blur-md z-50 border-b border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a href="index.html" class="flex-shrink-0 flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center font-bold text-slate-900 text-xl">
+                        <i class="fa-brands fa-aws"></i>
+                    </div>
+                    <span class="text-xl font-bold tracking-wide text-white">AWS Prep Hub</span>
+                </a>
+
+                <!-- Desktop Nav Menu -->
+                <nav class="hidden md:flex space-x-8 text-sm font-medium">
+                    <a href="#topics" class="hover:text-indigo-400 transition-colors">Exam Topics</a>
+                    <a href="#about" class="hover:text-indigo-400 transition-colors">About</a>
+                    <a href="#contact" class="hidden hover:text-indigo-400 transition-colors">Contact</a>
+                </nav>
+
+                <!-- Action Button -->
+                <div class="hidden md:block">
+                    <a href="#topics" class="px-4 py-2 text-sm font-medium bg-orange-500 hover:bg-orange-400 text-slate-950 font-semibold rounded-lg transition-all shadow-lg shadow-orange-500/20">
+                        Start Learning
+                    </a>
+                </div>
+
+                <!-- Mobile Hamburger Button -->
+                <div class="md:hidden">
+                    <button id="menu-btn" class="text-slate-300 hover:text-white focus:outline-none p-2">
+                        <i id="menu-icon" class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-800 border-b border-slate-700 px-4 pt-2 pb-6 space-y-3">
+            <a href="#topics" class="mobile-link block text-slate-300 hover:text-white py-2 border-b border-slate-700/50">Exam Topics</a>
+            <a href="#about" class="mobile-link block text-slate-300 hover:text-white py-2 border-b border-slate-700/50">About</a>
+            <a href="#contact" class="mobile-link block text-slate-300 hover:text-white py-2">Contact</a>
+            <a href="#topics" class="mobile-link block w-full text-center mt-4 px-4 py-2 text-sm font-semibold bg-orange-500 hover:bg-orange-400 text-slate-950 rounded-lg shadow-md">
+                Start Learning
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="pt-16">
+        
+        <!-- Hero Section -->
+        <section class="py-20 md:py-28 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span class="inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wider text-orange-400 bg-orange-950/60 border border-orange-800/50 rounded-full mb-6">
+                DVA-C02 Exam Preparation
+            </span>
+            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+                Master AWS Developer Concepts <br class="hidden sm:inline">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-200">Interactive Quiz Portal</span>
+            </h1>
+            <p class="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-8">
+                Comprehensive study notes, architecture breakdowns, and scenario-based practice exam questions designed for client-side offline execution.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#topics" class="px-6 py-3 bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold rounded-lg shadow-lg shadow-orange-500/20 transition-all text-center">
+                    Explore All Topics
+                </a>
+            </div>
+        </section>
+
+        <!-- Topics Grid Section -->
+        <section id="topics" class="py-16 bg-slate-950 border-y border-slate-800">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-xl mx-auto mb-12">
+                    <h2 class="text-3xl font-bold text-white mb-4">Core AWS Topics</h2>
+                    <p class="text-slate-400">Select a module below to open study guides and randomized practice tests.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Topic Card: Elastic Beanstalk -->
+                    <a href="beanstalk.html" class="p-6 bg-slate-900 border border-slate-800 rounded-xl hover:border-orange-500/50 hover:scale-[1.02] transition-all group block">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-orange-950/50 text-orange-400 rounded-lg flex items-center justify-center group-hover:bg-orange-500 group-hover:text-slate-950 transition-all">
+                                <i class="fa-solid fa-cubes text-xl"></i>
+                            </div>
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800/50">Ready</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2 group-hover:text-orange-400 transition-colors">Elastic Beanstalk</h3>
+                        <p class="text-slate-400 text-sm mb-4">Deployment strategies (Rolling, Immutable, Traffic Splitting), .ebextensions, environment tiers, and lifecycle management.</p>
+                        <div class="flex items-center text-xs font-semibold text-orange-400">
+                            <span>Open Module</span>
+                            <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </a>
+
+                    <!-- Topic Card: EC2 & Auto Scaling -->
+                    <a href="ec2.html" class="p-6 bg-slate-900 border border-slate-800 rounded-xl hover:border-orange-500/50 hover:scale-[1.02] transition-all group block">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-indigo-950/50 text-indigo-400 rounded-lg flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                                <i class="fa-solid fa-server text-xl"></i>
+                            </div>
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400">Target</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2 group-hover:text-indigo-400 transition-colors">EC2 & Auto Scaling</h3>
+                        <p class="text-slate-400 text-sm mb-4">Instance purchasing types, AMI creation, security groups, launch templates, and target tracking scaling policies.</p>
+                        <div class="flex items-center text-xs font-semibold text-indigo-400">
+                            <span>Open Module</span>
+                            <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </a>
+
+                    <!-- Topic Card: S3 & Storage -->
+                    <a href="s3.html" class="p-6 bg-slate-900 border border-slate-800 rounded-xl hover:border-orange-500/50 hover:scale-[1.02] transition-all group block">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-cyan-950/50 text-cyan-400 rounded-lg flex items-center justify-center group-hover:bg-cyan-500 group-hover:text-slate-950 transition-all">
+                                <i class="fa-solid fa-database text-xl"></i>
+                            </div>
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400">Target</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2 group-hover:text-cyan-400 transition-colors">Amazon S3</h3>
+                        <p class="text-slate-400 text-sm mb-4">Storage classes, CORS configurations, KMS encryption, bucket policies, lifecycle rules, and presigned URLs.</p>
+                        <div class="flex items-center text-xs font-semibold text-cyan-400">
+                            <span>Open Module</span>
+                            <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </a>
+
+                    <!-- Topic Card: DynamoDB -->
+                    <a href="dynamodb.html" class="p-6 bg-slate-900 border border-slate-800 rounded-xl hover:border-orange-500/50 hover:scale-[1.02] transition-all group block">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-blue-950/50 text-blue-400 rounded-lg flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
+                                <i class="fa-solid fa-table text-xl"></i>
+                            </div>
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400">Target</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">Amazon DynamoDB</h3>
+                        <p class="text-slate-400 text-sm mb-4">Primary keys, LSI vs GSI, RCU/WCU calculation, DynamoDB Streams, and optimistic locking via conditional writes.</p>
+                        <div class="flex items-center text-xs font-semibold text-blue-400">
+                            <span>Open Module</span>
+                            <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </a>
+
+                    <!-- Topic Card: AWS Lambda -->
+                    <a href="lambda.html" class="p-6 bg-slate-900 border border-slate-800 rounded-xl hover:border-orange-500/50 hover:scale-[1.02] transition-all group block">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-amber-950/50 text-amber-400 rounded-lg flex items-center justify-center group-hover:bg-amber-500 group-hover:text-slate-950 transition-all">
+                                <i class="fa-solid fa-bolt-lightning text-xl"></i>
+                            </div>
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400">Target</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2 group-hover:text-amber-400 transition-colors">AWS Lambda</h3>
+                        <p class="text-slate-400 text-sm mb-4">Execution context, layer integration, environment variables, concurrency limits, event source mappings, and VPC routing.</p>
+                        <div class="flex items-center text-xs font-semibold text-amber-400">
+                            <span>Open Module</span>
+                            <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </a>
+
+                    <!-- Topic Card: CloudFormation -->
+                    <a href="cloudformation.html" class="p-6 bg-slate-900 border border-slate-800 rounded-xl hover:border-orange-500/50 hover:scale-[1.02] transition-all group block">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-rose-950/50 text-rose-400 rounded-lg flex items-center justify-center group-hover:bg-rose-600 group-hover:text-white transition-all">
+                                <i class="fa-solid fa-code-branch text-xl"></i>
+                            </div>
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400">Target</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2 group-hover:text-rose-400 transition-colors">AWS CloudFormation</h3>
+                        <p class="text-slate-400 text-sm mb-4">Template parameters, intrinsic functions (!Ref, !GetAtt), drift detection, change sets, and stack policy rules.</p>
+                        <div class="flex items-center text-xs font-semibold text-rose-400">
+                            <span>Open Module</span>
+                            <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-800">
+            <h2 class="text-3xl font-bold text-white mb-6 text-center">About This Portal</h2>
+            <p class="text-slate-400 leading-relaxed text-center mb-6">
+                This portal is engineered to run locally with zero server requirements or telemetry. All quiz engines process selections locally in your browser using pure JavaScript, allowing offline practice anywhere.
+            </p>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="hidden py-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-slate-800/50 border border-slate-700/60 p-8 rounded-2xl shadow-xl">
+                <h2 class="text-2xl font-bold text-white mb-2 text-center">Get In Touch</h2>
+                <p class="text-slate-400 text-center mb-8 text-sm">Send feedback or submit custom questions to add to the question bank.</p>
+                
+                <form id="contact-form" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Your Name</label>
+                        <input type="text" required class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none text-slate-100 placeholder-slate-500 text-sm" placeholder="Developer">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Email Address</label>
+                        <input type="email" required class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none text-slate-100 placeholder-slate-500 text-sm" placeholder="dev@example.com">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Message</label>
+                        <textarea rows="4" required class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none text-slate-100 placeholder-slate-500 text-sm" placeholder="Write your message..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold rounded-lg shadow-lg shadow-orange-500/20 transition-all text-sm">
+                        Send Message
+                    </button>
+                </form>
+                <div id="form-status" class="hidden mt-4 p-3 bg-emerald-950/80 border border-emerald-700 text-emerald-300 rounded-lg text-sm text-center">
+                    Message submitted successfully!
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 py-8 text-center text-slate-500 text-sm">
+        <div class="max-w-6xl mx-auto px-4">
+            <p>© 2026 AWS Prep Hub. Built for AWS Certified Developer Associate preparation.</p>
+        </div>
+    </footer>
+
+    <!-- Interactive JavaScript -->
+    <script>
+        // Mobile Navigation Menu Toggle Logic
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            if (mobileMenu.classList.contains('hidden')) {
+                menuIcon.classList.replace('fa-xmark', 'fa-bars');
+            } else {
+                menuIcon.classList.replace('fa-bars', 'fa-xmark');
+            }
+        });
+
+        // Close mobile dropdown menu when clicking any link inside it
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                menuIcon.classList.replace('fa-xmark', 'fa-bars');
+            });
+        });
+
+        // Form Submission Handler
+        const form = document.getElementById('contact-form');
+        const status = document.getElementById('form-status');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            status.classList.remove('hidden');
+            form.reset();
+            setTimeout(() => status.classList.add('hidden'), 4000);
+        });
+    </script>
+</body>
+</html>
