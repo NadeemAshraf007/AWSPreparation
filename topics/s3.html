@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Certified Developer - Amazon S3 Mastery & Practice Quiz</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .active-tab {
+            border-bottom: 2px solid #3b82f6;
+            color: #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+            <div class="flex items-center space-x-3">
+                <span class="bg-amber-500 text-slate-900 font-black px-2.5 py-1 rounded text-sm tracking-wide">AWS</span>
+                <h1 class="text-xl font-bold tracking-tight text-white">S3 Certification Hub</h1>
+            </div>
+            <nav class="flex space-x-8">
+                <button id="nav-study" onclick="switchTab('study')" class="py-4 px-1 text-sm font-medium text-slate-300 hover:text-white active-tab">
+                    Study Notes
+                </button>
+                <button id="nav-quiz" onclick="switchTab('quiz')" class="py-4 px-1 text-sm font-medium text-slate-300 hover:text-white">
+                    Practice Exam Quiz
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- DETAILED STUDY NOTES SECTION -->
+        <div id="section-study" class="space-y-8">
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                <h2 class="text-2xl font-bold text-amber-400 mb-2">Amazon S3 Comprehensive Developer Notes</h2>
+                <p class="text-slate-300">In-depth study material mapped directly to the AWS Certified Developer Associate exam objectives.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Module 1 -->
+                <div class="bg-slate-800/80 p-6 rounded-lg border border-slate-700 space-y-3">
+                    <h3 class="text-xl font-bold text-blue-400 border-b border-slate-700 pb-2">1. Fundamentals & Global Architecture</h3>
+                    <ul class="text-slate-300 space-y-2 text-sm list-disc list-inside leading-relaxed">
+                        <li><strong>Buckets:</strong> Regional resources with a globally unique namespace across all AWS accounts.</li>
+                        <li><strong>Objects:</strong> Data files stored key-value style within buckets. Max size for a single object is <strong>5 TB</strong>. Any object larger than <strong>5 GB</strong> strictly requires Multi-part Upload.</li>
+                        <li><strong>Keys & Prefixes:</strong> Object paths act as string keys. Folders are logical prefixes (e.g., <code>folder/file.txt</code>), which dictate S3 performance partitioning.</li>
+                    </ul>
+                </div>
+
+                <!-- Module 2 -->
+                <div class="bg-slate-800/80 p-6 rounded-lg border border-slate-700 space-y-3">
+                    <h3 class="text-xl font-bold text-blue-400 border-b border-slate-700 pb-2">2. Storage Classes & Lifecycle Management</h3>
+                    <ul class="text-slate-300 space-y-2 text-sm list-disc list-inside leading-relaxed">
+                        <li><strong>S3 Standard:</strong> General-purpose storage; high availability (99.99%), low latency, no retrieval fees or minimum storage durations.</li>
+                        <li><strong>S3 Standard-IA / One Zone-IA:</strong> Designed for infrequent access. Requires a minimum object size of <strong>128 KB</strong> and a minimum billing duration of <strong>30 days</strong>.</li>
+                        <li><strong>S3 Intelligent-Tiering:</strong> Automatically shifts objects between access tiers without retrieval fees or operational overhead.</li>
+                        <li><strong>S3 Glacier Tiers:</strong>
+                            <ul class="pl-6 space-y-1 list-circle mt-1">
+                                <li><em>Instant Retrieval:</em> Millisecond access for archival data.</li>
+                                <li><em>Flexible Retrieval:</em> 3–5 hours (Standard), 1–5 minutes (Expedited), or 5–12 hours (Bulk). Minimum billing duration is <strong>90 days</strong>.</li>
+                                <li><em>Deep Archive:</em> Lowest cost; retrieval takes 12–48 hours. Minimum billing duration is <strong>180 days</strong>.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Module 3 -->
+                <div class="bg-slate-800/80 p-6 rounded-lg border border-slate-700 space-y-3">
+                    <h3 class="text-xl font-bold text-blue-400 border-b border-slate-700 pb-2">3. Encryption & Security</h3>
+                    <ul class="text-slate-300 space-y-2 text-sm list-disc list-inside leading-relaxed">
+                        <li><strong>SSE-S3:</strong> Default server-side encryption managed by AWS using AES-256 keys.</li>
+                        <li><strong>SSE-KMS:</strong> Uses AWS KMS keys (<code>x-amz-server-side-encryption: aws:kms</code>). Provides audit trails via CloudTrail but is subject to KMS API rate limits.</li>
+                        <li><strong>SSE-C:</strong> Customer-managed keys passed via HTTPS headers (<code>x-amz-server-side-encryption-customer-algorithm</code>). S3 encrypts the data and discards the key immediately.</li>
+                        <li><strong>Access Control:</strong> Enforce transport security via Bucket Policies checking <code>"aws:SecureTransport": "false"</code>. Account-level <strong>Block Public Access</strong> overrides permissive bucket rules.</li>
+                    </ul>
+                </div>
+
+                <!-- Module 4 -->
+                <div class="bg-slate-800/80 p-6 rounded-lg border border-slate-700 space-y-3">
+                    <h3 class="text-xl font-bold text-blue-400 border-b border-slate-700 pb-2">4. Performance Optimization</h3>
+                    <ul class="text-slate-300 space-y-2 text-sm list-disc list-inside leading-relaxed">
+                        <li><strong>Prefix Scaling:</strong> S3 supports up to <strong>3,500 PUT/POST/DELETE</strong> and <strong>5,500 GET/HEAD</strong> requests per second per prefix. Distribute keys across multiple prefixes to maximize throughput.</li>
+                        <li><strong>S3 Transfer Acceleration:</strong> Uses AWS Edge Locations over the global AWS backbone for fast long-distance uploads.</li>
+                        <li><strong>Byte-Range Fetches:</strong> Request specific byte segments (e.g., <code>bytes=0-2097152</code>) to parallelize downloads or fetch headers.</li>
+                    </ul>
+                </div>
+
+                <!-- Module 5 -->
+                <div class="bg-slate-800/80 p-6 rounded-lg border border-slate-700 space-y-3 md:col-span-2">
+                    <h3 class="text-xl font-bold text-blue-400 border-b border-slate-700 pb-2">5. Advanced Operations & Integrations</h3>
+                    <ul class="text-slate-300 space-y-2 text-sm list-disc list-inside leading-relaxed">
+                        <li><strong>S3 Versioning:</strong> Assigns version IDs to objects. Deletions without a Version ID place a <strong>Delete Marker</strong>; explicit version deletion requires MFA if <strong>MFA Delete</strong> is enabled (configurable only by the Root account).</li>
+                        <li><strong>Replication (CRR & SRR):</strong> Requires Versioning on both source and destination buckets. Does not replicate pre-existing objects or explicit version deletions.</li>
+                        <li><strong>Pre-Signed URLs:</strong> Temporary access grants for private objects using the creator's IAM privileges (max expiration: 7 days via CLI/SDK).</li>
+                        <li><strong>Event Notifications & Transformations:</strong> Triggers SQS, SNS, or Lambda on object events. <strong>S3 Object Lambda</strong> executes code to transform object payloads on GET requests.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUIZ SECTION -->
+        <div id="section-quiz" class="hidden max-w-3xl mx-auto space-y-6">
+            
+            <!-- Quiz Start Card -->
+            <div id="quiz-start-card" class="bg-slate-800 p-8 rounded-xl border border-slate-700 text-center space-y-4">
+                <h2 class="text-2xl font-bold text-white">AWS Developer Associate S3 Practice Quiz</h2>
+                <p class="text-slate-300">Each exam attempt draws <strong>10 random scenario-based questions</strong> out of a pool of 50 exam-level S3 questions.</p>
+                <button onclick="startQuiz()" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 font-semibold rounded-lg text-white transition">
+                    Start New Practice Quiz
+                </button>
+            </div>
+
+            <!-- Active Quiz Container -->
+            <div id="quiz-container" class="hidden bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-700 pb-4">
+                    <span id="question-progress" class="text-sm font-semibold text-amber-400">Question 1 of 10</span>
+                    <span id="quiz-score-tracker" class="text-sm text-slate-400">Score: 0</span>
+                </div>
+
+                <div id="question-text" class="text-lg font-medium text-white leading-relaxed"></div>
+
+                <div id="options-container" class="space-y-3"></div>
+
+                <div id="explanation-box" class="hidden p-4 rounded-lg bg-slate-900 border border-slate-700 text-sm space-y-1">
+                    <div id="explanation-title" class="font-bold"></div>
+                    <div id="explanation-text" class="text-slate-300"></div>
+                </div>
+
+                <div class="flex justify-end pt-4 border-t border-slate-700">
+                    <button id="next-btn" onclick="nextQuestion()" class="hidden px-5 py-2 bg-blue-600 hover:bg-blue-500 font-medium rounded text-white">
+                        Next Question
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Results Card -->
+            <div id="quiz-result-card" class="hidden bg-slate-800 p-8 rounded-xl border border-slate-700 text-center space-y-6">
+                <h2 class="text-3xl font-bold text-white">Quiz Completed!</h2>
+                <div class="text-5xl font-extrabold text-amber-400" id="final-score">0%</div>
+                <p id="result-message" class="text-slate-300"></p>
+                <button onclick="startQuiz()" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 font-semibold rounded-lg text-white transition">
+                    Try Another 10 Questions
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+        <!-- QUIZ SECTION -->
+        <div id="section-quiz" class="hidden max-w-3xl mx-auto space-y-6">
+            
+            <!-- Quiz Start Card -->
+            <div id="quiz-start-card" class="bg-slate-800 p-8 rounded-xl border border-slate-700 text-center space-y-4">
+                <h2 class="text-2xl font-bold text-white">AWS Developer Associate S3 Practice Quiz</h2>
+                <p class="text-slate-300">Each exam attempt draws <strong>10 random scenario-based questions</strong> out of a pool of 50 exam-level S3 questions.</p>
+                <button onclick="startQuiz()" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 font-semibold rounded-lg text-white transition">
+                    Start New Practice Quiz
+                </button>
+            </div>
+
+            <!-- Active Quiz Container -->
+            <div id="quiz-container" class="hidden bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-700 pb-4">
+                    <span id="question-progress" class="text-sm font-semibold text-amber-400">Question 1 of 10</span>
+                    <span id="quiz-score-tracker" class="text-sm text-slate-400">Score: 0</span>
+                </div>
+
+                <div id="question-text" class="text-lg font-medium text-white leading-relaxed"></div>
+
+                <div id="options-container" class="space-y-3"></div>
+
+                <div id="explanation-box" class="hidden p-4 rounded-lg bg-slate-900 border border-slate-700 text-sm space-y-1">
+                    <div id="explanation-title" class="font-bold"></div>
+                    <div id="explanation-text" class="text-slate-300"></div>
+                </div>
+
+                <div class="flex justify-end pt-4 border-t border-slate-700">
+                    <button id="next-btn" onclick="nextQuestion()" class="hidden px-5 py-2 bg-blue-600 hover:bg-blue-500 font-medium rounded text-white">
+                        Next Question
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Results Card -->
+            <div id="quiz-result-card" class="hidden bg-slate-800 p-8 rounded-xl border border-slate-700 text-center space-y-6">
+                <h2 class="text-3xl font-bold text-white">Quiz Completed!</h2>
+                <div class="text-5xl font-extrabold text-amber-400" id="final-score">0%</div>
+                <p id="result-message" class="text-slate-300"></p>
+                <button onclick="startQuiz()" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 font-semibold rounded-lg text-white transition">
+                    Try Another 10 Questions
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Application Script -->
+    <script>
+        // Tab Switcher
+        function switchTab(tab) {
+            const studySec = document.getElementById('section-study');
+            const quizSec = document.getElementById('section-quiz');
+            const navStudy = document.getElementById('nav-study');
+            const navQuiz = document.getElementById('nav-quiz');
+
+            if (tab === 'study') {
+                studySec.classList.remove('hidden');
+                quizSec.classList.add('hidden');
+                navStudy.classList.add('active-tab');
+                navQuiz.classList.remove('active-tab');
+            } else {
+                studySec.classList.add('hidden');
+                quizSec.classList.remove('hidden');
+                navQuiz.classList.add('active-tab');
+                navStudy.classList.remove('active-tab');
+            }
+        }
+
+        // Question Bank Pool (50 AWS Developer Associate S3 Questions)
+        const questionBank = [
+            {
+                q: "A developer is uploading a 7 GB file to an Amazon S3 bucket using the AWS SDK. What is the required method to successfully upload this object?",
+                options: ["Single-part PUT upload", "S3 Transfer Acceleration", "Multi-part upload", "S3 Byte-Range Fetch"],
+                answer: 2,
+                exp: "Objects larger than 5GB must be uploaded using Multi-part upload."
+            },
+            {
+                q: "What is the maximum allowed size for a single object stored in Amazon S3?",
+                options: ["100 GB", "1 TB", "5 TB", "Unlimited"],
+                answer: 2,
+                exp: "While S3 storage capacity is virtually unlimited, the maximum size of a single object is 5 TB."
+            },
+            {
+                q: "A developer needs to encrypt objects at rest in S3 using AWS-managed keys without managing key policies or rotation. Which default option should be selected?",
+                options: ["SSE-S3", "SSE-KMS", "SSE-C", "Client-Side Encryption"],
+                answer: 0,
+                exp: "SSE-S3 encrypts objects using keys managed completely by AWS (AES-256) and is enabled by default."
+            },
+            {
+                q: "Which request header must be included when making a PUT API call to enforce SSE-KMS encryption on an object?",
+                options: ["x-amz-server-side-encryption: AES256", "x-amz-server-side-encryption: aws:kms", "x-amz-server-side-encryption-customer-algorithm: AES256", "x-amz-security-token: kms"],
+                answer: 1,
+                exp: "To specify SSE-KMS during upload, set the header 'x-amz-server-side-encryption' to 'aws:kms'."
+            },
+            {
+                q: "An application requires encryption key management where the customer provides their own keys per request, but S3 handles encryption/decryption. S3 must NOT store the key. Which scheme is required?",
+                options: ["SSE-S3", "SSE-KMS", "SSE-C", "AWS Secrets Manager"],
+                answer: 2,
+                exp: "With SSE-C (Customer-Provided Keys), the client provides the key in the HTTP header per request, and S3 discards the key after encryption/decryption."
+            },
+            {
+                q: "When using SSE-C for uploading objects to S3, which communication protocol is strictly required?",
+                options: ["HTTP", "HTTPS", "SFTP", "TCP"],
+                answer: 1,
+                exp: "SSE-C requires HTTPS because the encryption key is transmitted directly in the request header."
+            },
+            {
+                q: "A developer is experiencing unexpected HTTP 503 throttling errors on S3 during peak GET request rates. How can they restructure object keys to increase throughput?",
+                options: ["Use a single folder for all objects", "Distribute objects across multiple unique prefixes", "Enable S3 Versioning", "Switch to Glacier Instant Retrieval"],
+                answer: 1,
+                exp: "S3 scales performance per prefix (5,500 GETs/sec per prefix). Spreading objects across multiple prefixes increases aggregate throughput."
+            },
+            {
+                q: "What is the maximum GET/HEAD request rate supported per second, per prefix in an S3 bucket?",
+                options: ["1,000", "3,500", "5,500", "10,000"],
+                answer: 2,
+                exp: "Amazon S3 supports up to 5,500 GET/HEAD requests per second per prefix."
+            },
+            {
+                q: "What is the maximum PUT/COPY/POST/DELETE request rate supported per second, per prefix in an S3 bucket?",
+                options: ["1,000", "3,500", "5,500", "10,000"],
+                answer: 1,
+                exp: "Amazon S3 supports up to 3,500 PUT/COPY/POST/DELETE requests per second per prefix."
+            },
+            {
+                q: "A developer wants to give unauthenticated users temporary permission to download a private S3 object via a browser. What feature should be used?",
+                options: ["S3 Bucket Policy with Principal: *", "Pre-Signed URLs", "AWS Cognito Identity Pool without auth", "Cross-Account IAM Role"],
+                answer: 1,
+                exp: "Pre-Signed URLs allow temporary access to private S3 objects using the permissions of the URL creator."
+            },
+            {
+                q: "What is the maximum expiration time for a Pre-Signed URL generated via the AWS CLI?",
+                options: ["12 hours", "24 hours", "7 days (604,800 seconds)", "30 days"],
+                answer: 2,
+                exp: "The maximum expiration period for a pre-signed URL generated by AWS CLI or SDK is 7 days."
+            },
+            {
+                q: "An application hosts its main UI on `https://www.example.com` and attempts to fetch assets stored in an S3 bucket configured for static web hosting. The browser blocks the request. What must be configured on S3?",
+                options: ["Bucket Access Control List (ACL)", "CORS (Cross-Origin Resource Sharing)", "S3 Transfer Acceleration", "MFA Delete"],
+                answer: 1,
+                exp: "Cross-Origin Resource Sharing (CORS) must be configured on the destination S3 bucket to allow cross-origin browser requests."
+            },
+            {
+                q: "Which S3 feature allows developers to execute custom code to modify or filter data before returning it to the requesting application?",
+                options: ["S3 Event Notifications", "S3 Object Lambda", "S3 Select", "S3 Storage Lens"],
+                answer: 1,
+                exp: "S3 Object Lambda uses AWS Lambda functions to automatically transform object data as it is retrieved by an application."
+            },
+            {
+                q: "A developer needs to configure real-time asynchronous processing of S3 object creation events with delivery to multiple subscribers including SQS and Lambda. What S3 feature/integration should be configured?",
+                options: ["S3 Event Notifications or EventBridge", "S3 Batch Operations", "S3 Access Points", "S3 Analytics"],
+                answer: 0,
+                exp: "S3 Event Notifications (to SNS/SQS/Lambda) or EventBridge rules can trigger workflows when objects are created."
+            },
+            {
+                q: "To enable Cross-Region Replication (CRR) between two S3 buckets, what prerequisite MUST be enabled on both source and destination buckets?",
+                options: ["Default SSE-KMS Encryption", "S3 Versioning", "Static Website Hosting", "S3 Transfer Acceleration"],
+                answer: 1,
+                exp: "S3 Versioning must be explicitly enabled on both source and destination buckets for replication."
+            },
+            {
+                q: "What happens when an object is deleted in an S3 bucket that has S3 Versioning enabled without specifying a Version ID?",
+                options: ["The object is permanently deleted", "A delete marker is placed on the object", "The request returns HTTP 403 Forbidden", "The object is moved to Glacier"],
+                answer: 1,
+                exp: "A DELETE request without a version ID adds a delete marker, making the object appear deleted while preserving older versions."
+            },
+            {
+                q: "A company requires that deleted S3 object versions remain recoverable immediately for 30 days, then archived for up to a year. Which setup accomplishes this efficiently?",
+                options: ["S3 Lifecycle policy transitioning noncurrent versions to Standard-IA then Glacier", "S3 Intelligent-Tiering with default settings", "Enable S3 Object Lock in Governance mode", "CRR to a backup bucket"],
+                answer: 0,
+                exp: "S3 Lifecycle rules can target 'noncurrent versions' to transition older versions to Standard-IA and subsequently Glacier."
+            },
+            {
+                q: "Which S3 storage class automatically optimizes storage costs by moving objects between tiers based on changing access patterns without operational overhead or retrieval fees?",
+                options: ["S3 Standard-IA", "S3 One Zone-IA", "S3 Intelligent-Tiering", "S3 Glacier Flexible Retrieval"],
+                answer: 2,
+                exp: "S3 Intelligent-Tiering monitors access patterns and automatically shifts objects between access tiers without retrieval fees."
+            },
+            {
+                q: "What is the minimum billable object size for objects stored in S3 Standard-IA or S3 One Zone-IA?",
+                options: ["0 KB", "64 KB", "128 KB", "1 MB"],
+                answer: 2,
+                exp: "S3 Standard-IA and One Zone-IA charge for a minimum object size of 128 KB."
+            },
+            {
+                q: "What is the minimum storage duration charge for objects placed into S3 Standard-IA?",
+                options: ["1 day", "30 days", "90 days", "180 days"],
+                answer: 1,
+                exp: "S3 Standard-IA has a minimum storage duration billing requirement of 30 days."
+            },
+            {
+                q: "Which S3 Glacier storage class provides millisecond retrieval times for archived data accessed once per quarter?",
+                options: ["Glacier Instant Retrieval", "Glacier Flexible Retrieval", "Glacier Deep Archive", "S3 Standard-IA"],
+                answer: 0,
+                exp: "S3 Glacier Instant Retrieval offers millisecond access for archive data requiring immediate retrieval."
+            },
+            {
+                q: "What retrieval option for S3 Glacier Flexible Retrieval provides access to archived files within 1 to 5 minutes?",
+                options: ["Standard", "Bulk", "Expedited", "Instant"],
+                answer: 2,
+                exp: "Expedited retrieval under Glacier Flexible Retrieval delivers objects within 1 to 5 minutes."
+            },
+            {
+                q: "What is the minimum storage duration charge for S3 Glacier Deep Archive?",
+                options: ["30 days", "90 days", "180 days", "365 days"],
+                answer: 2,
+                exp: "S3 Glacier Deep Archive has a minimum billing duration of 180 days."
+            },
+            {
+                q: "A developer wants to accelerate object uploads from users distributed globally to a single S3 bucket in us-east-1. Which feature utilizes AWS Edge Locations to achieve this?",
+                options: ["S3 Multi-Region Access Points", "S3 Transfer Acceleration", "AWS Direct Connect", "S3 Byte-Range Fetches"],
+                answer: 1,
+                exp: "S3 Transfer Acceleration routes traffic through AWS Edge Locations over the optimized private AWS network."
+            },
+            {
+                q: "A developer needs to download only the header (first 2 MB) of a 2 GB file stored in S3. How can this be achieved efficiently?",
+                options: ["S3 Select query", "S3 Byte-Range Fetch", "S3 Object Lambda", "Multi-part download"],
+                answer: 1,
+                exp: "Byte-Range Fetches allow applications to request specific byte ranges (e.g., bytes=0-2097152) of an S3 object."
+            },
+            {
+                q: "What prefix must custom user-defined metadata keys begin with when attached to an S3 object?",
+                options: ["x-aws-meta-", "x-amz-meta-", "s3-user-meta-", "custom-meta-"],
+                answer: 1,
+                exp: "User-defined object metadata names must start with the prefix 'x-amz-meta-'."
+            },
+            {
+                q: "Are object metadata and object tags directly searchable via standard S3 API operations?",
+                options: ["Yes, using the s3:SearchObject API", "No, an external database like DynamoDB must be used as a search index", "Yes, but only if S3 Select is enabled", "Yes, via the S3 Console only"],
+                answer: 1,
+                exp: "S3 does not support indexing or searching by metadata/tags directly; applications index metadata using DynamoDB or OpenSearch."
+            },
+            {
+                q: "Which S3 security control allows granting cross-account access to an entire S3 bucket without requiring IAM roles in the destination account?",
+                options: ["IAM User Policy", "S3 Bucket Policy", "S3 Access Point VPC Endpoint", "Key Policy"],
+                answer: 1,
+                exp: "S3 Bucket Policies are resource-based policies attached directly to buckets that can grant cross-account access."
+            },
+            {
+                q: "An IAM User has an explicit DENY in their IAM Policy for `s3:GetObject` on a bucket. However, the S3 Bucket Policy grants ALLOW to the user. What is the effective permission?",
+                options: ["Allowed", "Denied", "Allowed only via HTTPS", "Requires MFA"],
+                answer: 1,
+                exp: "In AWS IAM evaluation, an explicit DENY always overrides any ALLOW statements."
+            },
+            {
+                q: "How can an administrator strictly enforce that all traffic to an S3 bucket uses SSL/TLS (HTTPS)?",
+                options: ["Enable Default SSE-S3 Encryption", "Attach a Bucket Policy denying s3:GetObject/PutObject when aws:SecureTransport is false", "Turn on Block Public Access", "Enable S3 Versioning"],
+                answer: 1,
+                exp: "Checking `\"aws:SecureTransport\": \"false\"` in a Deny statement enforces encrypted connections in transit (HTTPS)."
+            },
+            {
+                q: "Which operations require Multi-Factor Authentication (MFA) when MFA Delete is enabled on a bucket?",
+                options: ["Permanently deleting an object version & suspending versioning", "Enabling versioning & listing versions", "Uploading a new object & reading objects", "Creating an S3 Access Point"],
+                answer: 0,
+                exp: "MFA Delete requires MFA only to permanently delete an object version or change/suspend the bucket's versioning state."
+            },
+            {
+                q: "Who is the ONLY identity authorized to enable or disable MFA Delete on an S3 bucket?",
+                options: ["Any IAM Administrator", "The AWS Account Root User", "The bucket creator IAM user", "AWS Support"],
+                answer: 1,
+                exp: "Only the AWS Account Root User can enable or disable MFA Delete on an S3 bucket."
+            },
+            {
+                q: "A developer wants to set up S3 Server Access Logging. What precaution must be taken regarding the target log bucket?",
+                options: ["The target bucket must be in a different AWS Region", "The target bucket should NOT be the monitored bucket itself to prevent logging loops", "The target bucket must have MFA Delete enabled", "The target bucket must use SSE-C"],
+                answer: 1,
+                exp: "Logging to the same bucket creates a recursive logging loop, causing exponential storage growth and high costs."
+            },
+            {
+                q: "What is the URL format for an S3 static website hosted in region `us-west-2` named `my-bucket`?",
+                options: ["http://my-bucket.s3-website-us-west-2.amazonaws.com", "https://my-bucket.s3.us-west-2.amazonaws.com", "http://s3.amazonaws.com/my-bucket/website", "http://my-bucket.s3-global.amazonaws.com"],
+                answer: 0,
+                exp: "S3 static website endpoints follow the pattern `http://<bucket-name>.s3-website-<region>.amazonaws.com`."
+            },
+            {
+                q: "When accessing a static website on S3, users receive a `403 Forbidden` error. What is the most likely cause?",
+                options: ["S3 Transfer Acceleration is disabled", "The bucket policy does not allow public read (s3:GetObject) access", "Versioning is not enabled", "The index document is in JSON format"],
+                answer: 1,
+                exp: "403 Forbidden on static website endpoints indicates that public read permissions (`s3:GetObject`) are missing or blocked."
+            },
+            {
+                q: "A developer needs to manage S3 bucket access policies for distinct teams (Finance, Sales, Analytics) with individual rules without creating a complex single bucket policy. What feature should be used?",
+                options: ["S3 Access Points", "S3 Multi-Region Access", "S3 Storage Lens", "IAM Group Overrides"],
+                answer: 0,
+                exp: "S3 Access Points allow creation of separate access point policies dedicated to specific application datasets or teams."
+            },
+            {
+                q: "How can S3 Access Points be restricted so they can only be reached from within a specific Amazon VPC?",
+                options: ["Configure a Gateway Endpoint and restrict the Access Point origin to VPC", "Use SSE-C encryption", "Enable S3 Transfer Acceleration", "Enable MFA Delete on the Access Point"],
+                answer: 0,
+                exp: "Access Points can be configured with a Network Origin set to VPC, combined with VPC Interface/Gateway Endpoints."
+            },
+            {
+                q: "Does S3 Cross-Region Replication (CRR) automatically replicate pre-existing objects present in the bucket prior to enabling CRR?",
+                options: ["Yes, instantly", "No, only new objects created after enabling replication are replicated", "Yes, but only if they are smaller than 100 MB", "No, pre-existing objects are deleted"],
+                answer: 1,
+                exp: "CRR only replicates new objects uploaded after enabling replication. Pre-existing objects require S3 Batch Replication."
+            },
+            {
+                q: "When an object version is explicitly deleted by specifying its Version ID, does CRR replicate this deletion to the target bucket?",
+                options: ["Yes, the version is deleted in the target bucket", "No, explicit version ID deletions are not replicated to prevent malicious actions", "Yes, but only if MFA was provided", "Only if SRR is used instead of CRR"],
+                answer: 1,
+                exp: "Deletions specifying a Version ID are NOT replicated to destination buckets to protect against unintended data loss."
+            },
+            {
+                q: "Which S3 analytics tool provides recommendations on when to transition objects from S3 Standard to S3 Standard-IA?",
+                options: ["S3 Storage Class Analysis", "S3 Storage Lens", "CloudWatch Metrics", "AWS Trusted Advisor"],
+                answer: 0,
+                exp: "S3 Storage Class Analysis observes data access patterns to recommend lifecycle transitions to Standard-IA."
+            },
+            {
+                q: "What is the minimum storage duration for S3 Glacier Flexible Retrieval?",
+                options: ["30 days", "60 days", "90 days", "180 days"],
+                answer: 2,
+                exp: "Glacier Flexible Retrieval has a minimum storage duration charge of 90 days."
+            },
+            {
+                q: "Which S3 feature prevents accidental public exposure of company S3 buckets at the AWS account level?",
+                options: ["S3 Block Public Access", "AWS Shield Advanced", "S3 Access Analyzer", "S3 Object Lock"],
+                answer: 0,
+                exp: "S3 Block Public Access provides centralized settings to override and block public access settings across an entire account or bucket."
+            },
+            {
+                q: "A developer is configuring an S3 Lifecycle rule to clean up failed or incomplete uploads. Which action should be included?",
+                options: ["AbortIncompleteMultipartUpload", "DeleteMarkerReplication", "NoncurrentVersionExpiration", "CleanUpFailedPutObject"],
+                answer: 0,
+                exp: "The `AbortIncompleteMultipartUpload` action automatically deletes parts of incomplete multipart uploads after a specified number of days."
+            },
+            {
+                q: "What happens to unversioned files in an S3 bucket when S3 Versioning is enabled for the first time?",
+                options: ["They are assigned a Version ID of 'null'", "They are permanently deleted", "They are assigned a random UUID Version ID", "They are moved to S3 Standard-IA"],
+                answer: 0,
+                exp: "Objects existing in a bucket prior to enabling versioning have their Version ID set to 'null'."
+            },
+            {
+                q: "If an S3 bucket policy enforces SSE-KMS encryption, what happens when a client sends a PUT request with `x-amz-server-side-encryption: AES256`?",
+                options: ["S3 automatically converts it to KMS", "The upload is rejected with HTTP 403 Access Denied", "The upload succeeds without encryption", "S3 prompts for a client key"],
+                answer: 1,
+                exp: "If a bucket policy explicitly requires 'aws:kms' for the encryption header, requests with 'AES256' violate the policy and are denied."
+            },
+            {
+                q: "Which S3 storage class has NO retrieval fees and NO minimum storage duration requirements?",
+                options: ["S3 Standard", "S3 Standard-IA", "S3 Glacier Instant Retrieval", "S3 One Zone-IA"],
+                answer: 0,
+                exp: "S3 Standard charges for storage and API requests, but has no minimum object size, no minimum duration, and no retrieval fees."
+            },
+            {
+                q: "In S3 bucket naming, which of the following is a VALID bucket name?",
+                options: ["My_Aws_Bucket", "my-aws-bucket-2026", "192.168.1.1", "mybucket-s3alias"],
+                answer: 1,
+                exp: "Bucket names must be 3-63 characters, lowercase, no underscores, not formatted as IP addresses, and must not end in '-s3alias'."
+            },
+            {
+                q: "What is the result of suspending S3 Versioning on an existing S3 bucket?",
+                options: ["All historical object versions are deleted", "Existing object versions remain intact, but new uploads won't receive unique Version IDs", "The bucket is deleted", "Objects are moved to Glacier"],
+                answer: 1,
+                exp: "Suspending versioning prevents new versions from being created, but existing object versions are preserved."
+            },
+            {
+                q: "Which AWS service destination is supported for S3 Event Notifications?",
+                options: ["Amazon DynamoDB", "Amazon SQS", "AWS Step Functions (directly)", "Amazon EC2"],
+                answer: 1,
+                exp: "S3 Event Notifications directly support Amazon SNS, Amazon SQS queues, and AWS Lambda functions."
+            },
+            {
+                q: "A application uses SSE-KMS and experiences rate limiting errors during high object retrieval spikes. Which AWS KMS quota limit is being breached?",
+                options: ["KMS Request Quota Per Second (Decrypt/GenerateDataKey)", "KMS Key Policy Size Limit", "KMS Secret Quota", "S3 Bucket Key Quota"],
+                answer: 0,
+                exp: "SSE-KMS calls KMS `GenerateDataKey` on upload and `Decrypt` on download, which are subject to KMS requests-per-second quotas."
+            }
+        ];
+
+        let activeQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        // Shuffle Array Helper
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        // Start Quiz Session
+        function startQuiz() {
+            // Pick 10 random questions
+            activeQuestions = shuffle([...questionBank]).slice(0, 10);
+            currentQuestionIndex = 0;
+            score = 0;
+
+            document.getElementById('quiz-start-card').classList.add('hidden');
+            document.getElementById('quiz-result-card').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+
+            renderQuestion();
+        }
+
+        // Render Current Question
+        function renderQuestion() {
+            const q = activeQuestions[currentQuestionIndex];
+            
+            document.getElementById('question-progress').innerText = `Question ${currentQuestionIndex + 1} of 10`;
+            document.getElementById('quiz-score-tracker').innerText = `Score: ${score}`;
+            document.getElementById('question-text').innerText = q.q;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            document.getElementById('explanation-box').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-lg bg-slate-700/50 hover:bg-slate-700 border border-slate-600 transition text-slate-200 text-sm font-medium";
+                btn.innerText = `${String.fromCharCode(65 + idx)}. ${opt}`;
+                btn.onclick = () => selectAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        // Handle Option Selection
+        function selectAnswer(selectedIndex) {
+            const q = activeQuestions[currentQuestionIndex];
+            const optionsBtns = document.getElementById('options-container').children;
+
+            // Disable all option buttons
+            for (let btn of optionsBtns) {
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-slate-700');
+            }
+
+            const expBox = document.getElementById('explanation-box');
+            const expTitle = document.getElementById('explanation-title');
+            const expText = document.getElementById('explanation-text');
+
+            if (selectedIndex === q.answer) {
+                score++;
+                optionsBtns[selectedIndex].classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-200');
+                expTitle.innerText = "Correct!";
+                expTitle.className = "font-bold text-emerald-400";
+            } else {
+                optionsBtns[selectedIndex].classList.add('bg-rose-950', 'border-rose-500', 'text-rose-200');
+                optionsBtns[q.answer].classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-200');
+                expTitle.innerText = "Incorrect";
+                expTitle.className = "font-bold text-rose-400";
+            }
+
+            expText.innerText = q.exp;
+            expBox.classList.remove('hidden');
+
+            document.getElementById('quiz-score-tracker').innerText = `Score: ${score}`;
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+
+        // Advance Question
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < activeQuestions.length) {
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Display Final Results
+        function showResults() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            const resultCard = document.getElementById('quiz-result-card');
+            resultCard.classList.remove('hidden');
+
+            const percentage = Math.round((score / 10) * 100);
+            document.getElementById('final-score').innerText = `${percentage}% (${score}/10)`;
+
+            const msg = document.getElementById('result-message');
+            if (percentage >= 80) {
+                msg.innerText = "Great job! You have a solid understanding of AWS S3 concepts required for the Developer Associate exam.";
+            } else {
+                msg.innerText = "Review the S3 study notes above and try another attempt to improve your score.";
+            }
+        }
+    </script>
+</body>
+</html>

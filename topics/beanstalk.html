@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Elastic Beanstalk Study Hub & Exam Practice</title>
+    <style>
+        :root {
+            --aws-navy: #232f3e;
+            --aws-orange: #ff9900;
+            --aws-squid: #161e2d;
+            --aws-light-bg: #f2f3f3;
+            --aws-border: #eaeded;
+            --text-dark: #16191f;
+            --text-muted: #545b64;
+            --correct-green: #1d8102;
+            --wrong-red: #d13212;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--aws-light-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        header h1 span {
+            color: var(--aws-orange);
+        }
+
+        nav {
+            display: flex;
+            background-color: var(--aws-squid);
+            padding: 0 2rem;
+            border-bottom: 3px solid var(--aws-orange);
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: #aab7b8;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        nav button:hover, nav button.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-bottom: 3px solid var(--aws-orange);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--aws-border);
+            box-shadow: var(--card-shadow);
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            color: var(--aws-navy);
+            border-bottom: 2px solid var(--aws-border);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.4rem;
+        }
+
+        code {
+            background-color: #f1f3f3;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: "Courier New", Courier, monospace;
+            color: #c0392b;
+            font-size: 0.9em;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--aws-border);
+        }
+
+        th {
+            background-color: var(--aws-navy);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9f9;
+        }
+
+        /* Quiz Specific Styles */
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--aws-border);
+        }
+
+        .btn {
+            background-color: var(--aws-orange);
+            color: var(--aws-navy);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #e68a00;
+        }
+
+        .question-block {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--aws-border);
+            box-shadow: var(--card-shadow);
+        }
+
+        .question-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--aws-navy);
+        }
+
+        .options-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .option-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 10px 14px;
+            border: 1px solid var(--aws-border);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .option-label:hover {
+            background-color: #f2f8ff;
+        }
+
+        .option-label input {
+            margin-right: 12px;
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .explanation.correct {
+            background-color: #eaf5ea;
+            border: 1px solid var(--correct-green);
+            color: var(--correct-green);
+        }
+
+        .explanation.incorrect {
+            background-color: #fdf2f2;
+            border: 1px solid var(--wrong-red);
+            color: var(--wrong-red);
+        }
+
+        .score-board {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .score-board h2 {
+            font-size: 2rem;
+            color: var(--aws-navy);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><span>AWS</span> Developer Associate Study Portal</h1>
+        <div>Topic: Elastic Beanstalk & CloudFormation</div>
+    </header>
+
+    <nav>
+        <button class="tab-btn active" onclick="switchTab('study')">Study Notes</button>
+        <button class="tab-btn" onclick="switchTab('quiz')">Practice Quiz (10 Random)</button>
+    </nav>
+
+    <div class="container">
+        <!-- STUDY NOTES TAB -->
+        <div id="study" class="tab-content active">
+            <div class="card">
+                <h2>1. Elastic Beanstalk Overview</h2>
+                <ul>
+                    <li><strong>Concept:</strong> Developer-centric view of deploying applications on AWS. It handles provisioning, load balancing, auto-scaling, and health monitoring automatically.</li>
+                    <li><strong>Cost:</strong> Elastic Beanstalk is free; you pay only for the underlying AWS resources (EC2, ELB, RDS, etc.)[cite: 1].</li>
+                    <li><strong>Supported Platforms:</strong> Go, Java SE, Java with Tomcat, .NET Core/Windows, Node.js, PHP, Python, Ruby, Packer, Single/Multi-container Docker, and Preconfigured Docker[cite: 1].</li>
+                    <li><strong>Environment Tiers:</strong>
+                        <ul>
+                            <li><em>Web Server Tier:</em> Standard web app tier behind an ELB connected to an Auto Scaling Group[cite: 1].</li>
+                            <li><em>Worker Tier:</em> Pulls tasks off an Amazon SQS queue and processes them asynchronously[cite: 1]. Scales based on SQS queue size[cite: 1].</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>2. Deployment Strategies Matrix</h2>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Downtime</th>
+                                <th>Deploy Speed</th>
+                                <th>Cost</th>
+                                <th>Rollback Mechanism</th>
+                                <th>Target Instances</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>All at once</strong></td>
+                                <td>Yes</td>
+                                <td>Fastest</td>
+                                <td>No extra cost</td>
+                                <td>Manual redeploy</td>
+                                <td>Existing[cite: 1]</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Rolling</strong></td>
+                                <td>No (Below Capacity)</td>
+                                <td>Slow</td>
+                                <td>No extra cost</td>
+                                <td>Manual redeploy</td>
+                                <td>Existing[cite: 1]</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Rolling with Additional Batch</strong></td>
+                                <td>No (At Capacity)</td>
+                                <td>Slow</td>
+                                <td>Small extra cost</td>
+                                <td>Manual redeploy</td>
+                                <td>New & Existing[cite: 1]</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Immutable</strong></td>
+                                <td>No</td>
+                                <td>Slowest</td>
+                                <td>High (2x capacity)</td>
+                                <td>Terminate new ASG</td>
+                                <td>New[cite: 1]</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Traffic Splitting</strong></td>
+                                <td>No</td>
+                                <td>Configurable</td>
+                                <td>Temporary extra cost</td>
+                                <td>Automated rollback</td>
+                                <td>New[cite: 1]</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Blue / Green</strong></td>
+                                <td>No</td>
+                                <td>Manual</td>
+                                <td>High (2x envs)</td>
+                                <td>Swap CNAME / Route 53</td>
+                                <td>New Environment[cite: 1]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>3. Essential Configuration & Management</h2>
+                <ul>
+                    <li><strong>EB Extensions:</strong> Configured using <code>.config</code> files in the <code>.ebextensions/</code> directory at the root of the source code[cite: 1]. Written in YAML or JSON format[cite: 1]. Can provision custom resources like RDS, ElastiCache, or DynamoDB[cite: 1].</li>
+                    <li><strong>Lifecycle Policy:</strong> Elastic Beanstalk can store at most 1,000 application versions[cite: 1]. Lifecycle policies automatically remove old versions based on time or total space[cite: 1]. Currently deployed versions will not be deleted[cite: 1].</li>
+                    <li><strong>Database Best Practices:</strong>
+                        <ul>
+                            <li><em>Dev/Test:</em> Database can be created inside Elastic Beanstalk[cite: 1].</li>
+                            <li><em>Production:</em> Database should be created externally (standalone RDS) and connected via environment variables[cite: 1]. This decouples the database lifecycle from the Elastic Beanstalk environment lifecycle[cite: 1].</li>
+                        </ul>
+                    </li>
+                    <li><strong>CLI Commands:</strong> Key commands include <code>eb create</code>, <code>eb status</code>, <code>eb health</code>, <code>eb events</code>, <code>eb logs</code>, <code>eb open</code>, <code>eb deploy</code>, <code>eb config</code>, and <code>eb terminate</code>[cite: 1].</li>
+                    <li><strong>Under the Hood:</strong> Elastic Beanstalk uses AWS CloudFormation to provision resources[cite: 1].</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- PRACTICE QUIZ TAB -->
+        <div id="quiz" class="tab-content">
+            <div class="quiz-controls">
+                <div>
+                    <strong id="question-count-text">Questions Loaded: 10</strong>
+                </div>
+                <button class="btn" onclick="startNewQuiz()">Generate New 10-Question Test</button>
+            </div>
+
+            <div id="score-board" class="score-board">
+                <h2 id="final-score">Your Score: 0 / 10</h2>
+                <p id="score-message"></p>
+                <br>
+                <button class="btn" onclick="startNewQuiz()">Try Another Set</button>
+            </div>
+
+            <div id="quiz-container"></div>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <button id="submit-btn" class="btn" onclick="submitQuiz()" style="font-size: 1.1rem; padding: 0.8rem 2rem;">Submit Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Question Bank constructed from the uploaded PDF slides
+        const questionBank = [
+            {
+                q: "A developer needs to deploy an application update to AWS Elastic Beanstalk with zero downtime and no temporary reduction in application capacity. Cost is not an issue, but the deployment must maintain 100% running capacity at all times without creating a separate environment. Which deployment strategy should be selected?",
+                options: [
+                    "All at once",
+                    "Rolling",
+                    "Rolling with additional batch",
+                    "Blue/Green"
+                ],
+                answer: 2,
+                explanation: "Rolling with additional batches spins up a new batch of instances first to maintain full capacity throughout the entire deployment process."
+            },
+            {
+                q: "Your application is hosted on Elastic Beanstalk and uses an in-memory session cache. You are planning to deploy a critical security patch. You need the fastest deployment method possible, and a short downtime window is acceptable. Which method fits this scenario?",
+                options: [
+                    "All at once",
+                    "Immutable",
+                    "Traffic Splitting",
+                    "Rolling with additional batch"
+                ],
+                answer: 0,
+                explanation: "All at once is the fastest deployment method, though it incurs downtime as all instances are updated simultaneously."
+            },
+            {
+                q: "A developer wants to provision an Amazon ElastiCache cluster alongside an Elastic Beanstalk application so that it automatically deploys with the application environment. Where should the resource configuration file be placed?",
+                options: [
+                    "In the root directory named cloudformation.json",
+                    "In the .ebextensions/ folder using a .config file extension",
+                    "In the .elasticbeanstalk/ directory under settings.yaml",
+                    "Inside the application source code root named elasticbeanstalk.cb"
+                ],
+                answer: 1,
+                explanation: "Custom resources and configuration overrides are placed in the .ebextensions/ folder in YAML/JSON format with a .config extension."
+            },
+            {
+                q: "An Elastic Beanstalk deployment fails due to an issue where developers are unable to upload new application versions. Investigation shows that the environment has reached its maximum version storage limit. What is the default maximum limit of application versions Elastic Beanstalk can store?",
+                options: [
+                    "100",
+                    "500",
+                    "1,000",
+                    "10,000"
+                ],
+                answer: 2,
+                explanation: "Elastic Beanstalk enforces a limit of 1,000 application versions per account. A lifecycle policy should be set up to clean up old versions."
+            },
+            {
+                q: "A web application running in Elastic Beanstalk requires asynchronous processing of long-running video transcoding tasks. Which architecture pattern is recommended by AWS?",
+                options: [
+                    "Configure an HTTP keep-alive timeout on the Application Load Balancer.",
+                    "Decouple the web tier from a Worker Tier using an Amazon SQS queue.",
+                    "Use Immutable deployment to run long tasks on dedicated temporary instances.",
+                    "Increase the instance size in the Auto Scaling group."
+                ],
+                answer: 1,
+                explanation: "Elastic Beanstalk Worker Environments pull messages from an SQS queue to perform background/asynchronous processing, decoupling it from the Web Environment."
+            },
+            {
+                q: "An Elastic Beanstalk production application currently uses a Classic Load Balancer (CLB). The engineering team needs to upgrade to an Application Load Balancer (ALB) to support path-based routing. How can this be accomplished without downtime?",
+                options: [
+                    "Update the Load Balancer type in the existing environment options.",
+                    "Use the EB CLI command `eb mutate --lb alb`.",
+                    "Create a new environment with an ALB, deploy the application, and perform a CNAME swap.",
+                    "Modify the .ebextensions config file and redeploy with All at Once method."
+                ],
+                answer: 2,
+                explanation: "You cannot change the Load Balancer type after an Elastic Beanstalk environment is created. You must create a new environment with the desired LB type and perform a CNAME swap or Route 53 update."
+            },
+            {
+                q: "A developer is configuring a production database for an Elastic Beanstalk application. Why is it recommended to create the Amazon RDS instance outside of the Elastic Beanstalk environment?",
+                options: [
+                    "Elastic Beanstalk cannot authenticate with RDS databases.",
+                    "RDS instances created inside an environment are deleted if the environment is terminated.",
+                    "RDS instances created inside Elastic Beanstalk do not support Multi-AZ deployments.",
+                    "It lowers overall network latency between EC2 and RDS."
+                ],
+                answer: 1,
+                explanation: "If an RDS database is provisioned inside an Elastic Beanstalk environment, its lifecycle is tied to the environment, meaning deleting the environment will delete the database."
+            },
+            {
+                q: "Which AWS infrastructure provisioner operates under the hood when deploying applications via AWS Elastic Beanstalk?",
+                options: [
+                    "AWS OpsWorks",
+                    "AWS CloudFormation",
+                    "AWS Systems Manager",
+                    "AWS CodeDeploy"
+                ],
+                answer: 1,
+                explanation: "Elastic Beanstalk relies on CloudFormation templates under the hood to provision all required AWS services."
+            },
+            {
+                q: "A developer wants to implement Canary Testing for an Elastic Beanstalk application update to send 10% of incoming traffic to the new version for monitoring before full rollout. Which deployment strategy supports this requirement natively?",
+                options: [
+                    "Rolling",
+                    "Immutable",
+                    "Traffic Splitting",
+                    "Blue/Green"
+                ],
+                answer: 2,
+                explanation: "Traffic Splitting deploys the new version to a temporary ASG and routes a configurable percentage of incoming traffic (canary testing) while monitoring health."
+            },
+            {
+                q: "You need to roll back a failed deployment immediately with minimum impact. The deployment was executed using the Immutable strategy. What is the fastest rollback method?",
+                options: [
+                    "Redeploy the previous source code package manually.",
+                    "Terminate the temporary Auto Scaling Group created for the deployment.",
+                    "Execute `eb rollback` from the command line interface.",
+                    "Perform a CNAME swap to restore previous DNS mappings."
+                ],
+                answer: 1,
+                explanation: "Because Immutable deployments launch new instances in a isolated temporary Auto Scaling Group, rolling back simply requires terminating that temporary ASG."
+            },
+            {
+                q: "A developer uses the EB CLI to manage environments. Which command is used to view real-time environment health and instance metrics?",
+                options: [
+                    "eb status",
+                    "eb health",
+                    "eb logs",
+                    "eb events"
+                ],
+                answer: 1,
+                explanation: "The command `eb health` provides real-time health details for instances running within an Elastic Beanstalk environment."
+            },
+            {
+                q: "When configuring Elastic Beanstalk Lifecycle Policies for application versions, what happens to an application version that is currently deployed?",
+                options: [
+                    "It is immediately terminated if it exceeds the retention time.",
+                    "It is moved to Amazon S3 Glacier archive.",
+                    "It will not be deleted even if it matches deletion criteria.",
+                    "The policy fails and throws an error log."
+                ],
+                answer: 2,
+                explanation: "Elastic Beanstalk lifecycle policies explicitly protect active/currently deployed application versions from being deleted."
+            },
+			{
+        q: "An application hosted on Elastic Beanstalk needs to deploy updates using canary testing, routing 10% of traffic to the new version initially. If the new version encounters errors, the system must trigger an automated rollback. Which deployment method natively supports this behavior?",
+        options: [
+            "Blue/Green deployment",
+            "Immutable deployment",
+            "Traffic Splitting",
+            "Rolling with additional batch"
+        ],
+        answer: 2,
+        explanation: "Traffic Splitting supports canary testing by routing a configurable percentage of traffic to the new version deployed in a temporary ASG and performs an automated rollback if deployment health checks fail[cite: 1]."
+    },
+    {
+        q: "A developer is writing configuration files for Elastic Beanstalk to customize the environment. Where must these configuration files be located within the application source bundle?",
+        options: [
+            ".ebextensions/ directory at the root level using .config files",
+            ".elasticbeanstalk/ directory at the root level using .yaml files",
+            "src/main/resources/ directory using .json files",
+            "ebconfig/ directory at the root level using .env files"
+        ],
+        answer: 0,
+        explanation: "Elastic Beanstalk extensions must be placed in the .ebextensions/ directory in the root of the source code with a .config file extension[cite: 1]."
+    },
+    {
+        q: "A developer wants to provision an Amazon ElastiCache cluster along with an Elastic Beanstalk environment. How can this resource be defined so that it is managed directly by the Beanstalk environment?",
+        options: [
+            "Add the ElastiCache resource definition inside a .config file within .ebextensions/",
+            "Use the EB CLI command `eb create elasticache`",
+            "Define the ElastiCache cluster inside the application's package.json or requirements.txt file",
+            "Modify the Dockerrun.aws.json file to include the ElastiCache endpoint"
+        ],
+        answer: 0,
+        explanation: "You can define additional AWS resources (such as ElastiCache, DynamoDB, or RDS) using CloudFormation syntax inside .config files located in the .ebextensions/ folder[cite: 1]."
+    },
+    {
+        q: "What happens to AWS resources (such as an ElastiCache cluster) defined inside `.ebextensions/` when the Elastic Beanstalk environment is terminated?",
+        options: [
+            "The resources are retained and transferred to a orphan stack.",
+            "The resources are automatically deleted along with the environment.",
+            "The resources are automatically converted into standalone CloudFormation stacks.",
+            "The termination fails until the resources are manually removed from .ebextensions/."
+        ],
+        answer: 1,
+        explanation: "Resources created and managed via .ebextensions/ are tied to the lifecycle of the Elastic Beanstalk environment and will be deleted if the environment is terminated[cite: 1]."
+    },
+    {
+        q: "An Elastic Beanstalk application experiences deployment failures with the error 'Maximum number of application versions reached'. How should the developer prevent this error from happening in the future?",
+        options: [
+            "Increase the storage capacity of the underlying EC2 instances.",
+            "Configure an Elastic Beanstalk Lifecycle Policy based on time or space to delete old versions.",
+            "Delete the source bundles directly from the S3 bucket associated with Elastic Beanstalk.",
+            "Upgrade the application from a Single Instance environment to High Availability."
+        ],
+        answer: 1,
+        explanation: "Elastic Beanstalk has a limit of 1,000 application versions[cite: 1]. Configuring a Lifecycle Policy automatically removes older application versions based on age or total count[cite: 1]."
+    },
+    {
+        q: "During an Elastic Beanstalk application deployment using the Rolling deployment strategy, what happens to the overall capacity of the application during the update process?",
+        options: [
+            "Capacity increases beyond 100% because extra instances are launched.",
+            "Capacity is reduced below 100% because a subset of instances is taken out of service to perform the update.",
+            "Capacity remains strictly at 100% because all instances are updated simultaneously.",
+            "Traffic is routed to a secondary environment via CNAME swap."
+        ],
+        answer: 1,
+        explanation: "In a standard Rolling deployment, instances in a batch are taken out of service to deploy the update, causing the application to run below full capacity during deployment[cite: 1]."
+    },
+    {
+        q: "A company wants to minimize deployment costs in a development environment while testing quick iterations of an Elastic Beanstalk application. Downtime during deployment is acceptable. Which deployment method is most suitable?",
+        options: [
+            "Immutable",
+            "Traffic Splitting",
+            "Rolling with additional batch",
+            "All at once"
+        ],
+        answer: 3,
+        explanation: "All at once is the fastest deployment method and incurs no additional cost, making it ideal for quick iterations in development environments where downtime is acceptable[cite: 1]."
+    },
+    {
+        q: "Which AWS service is used under the hood by Elastic Beanstalk to provision and configure all underlying AWS infrastructure resources?",
+        options: [
+            "AWS CloudFormation",
+            "AWS Systems Manager",
+            "AWS OpsWorks",
+            "AWS CodePipeline"
+        ],
+        answer: 0,
+        explanation: "Under the hood, Elastic Beanstalk relies on AWS CloudFormation to provision services such as EC2, ELB, and Auto Scaling Groups[cite: 1]."
+    },
+    {
+        q: "A developer needs to decouple an Amazon RDS database from an existing Elastic Beanstalk environment so that the database remains intact if the Beanstalk environment is deleted. What is the correct sequence of steps?",
+        options: [
+            "1. Snapshot RDS. 2. Enable deletion protection on RDS. 3. Create a new EB environment pointing to RDS. 4. Perform CNAME swap. 5. Terminate old EB environment.",
+            "1. Terminate old EB environment. 2. Restore RDS from auto-backup. 3. Launch new EB environment pointing to restored RDS.",
+            "1. Delete CF stack. 2. Modify .ebextensions to remove RDS. 3. Run `eb deploy` on the existing environment.",
+            "1. Perform a CNAME swap. 2. Change RDS master password. 3. Delete the old environment's S3 bucket."
+        ],
+        answer: 0,
+        explanation: "Decoupling requires taking a snapshot as a safeguard, protecting the RDS database from deletion, launching a new EB environment that points to the existing RDS instance, swapping URLs/CNAMEs, and terminating the old environment[cite: 1]."
+    },
+    {
+        q: "You are running a production web application on Elastic Beanstalk and need to swap the underlying Elastic Load Balancer from a Classic Load Balancer (CLB) to an Application Load Balancer (ALB). How should this migration be handled without downtime?",
+        options: [
+            "Edit the environment configuration in the EB Console to change the load balancer type.",
+            "Create a new environment with an ALB, deploy the code, and perform a CNAME swap or Route 53 DNS update.",
+            "Update the .ebextensions config file setting `OptionSetting: LoadBalancerType = ALB` and redeploy.",
+            "Use the EB CLI command `eb config` to dynamically change the load balancer type."
+        ],
+        answer: 1,
+        explanation: "You cannot change the Load Balancer type of an existing Elastic Beanstalk environment[cite: 1]. You must create a new environment with the new load balancer type and perform a CNAME swap or DNS update[cite: 1]."
+    },
+    {
+        q: "A developer uses the EB CLI to deploy and manage applications. Which EB CLI command creates a zip file, uploads it to S3 as a new application version, and deploys it to the running environment?",
+        options: [
+            "eb update",
+            "eb push",
+            "eb deploy",
+            "eb publish"
+        ],
+        answer: 2,
+        explanation: "The command `eb deploy` packages your source code into a zip archive, uploads it to S3 to create a new application version, and deploys it to the target environment[cite: 1]."
+    },
+    {
+        q: "Which EB CLI command can be used by a developer to view real-time logs from the EC2 instances in an Elastic Beanstalk environment?",
+        options: [
+            "eb status",
+            "eb health",
+            "eb logs",
+            "eb events"
+        ],
+        answer: 2,
+        explanation: "The command `eb logs` retrieves and displays logs from the instances running in the Elastic Beanstalk environment[cite: 1]."
+    },
+    {
+        q: "An Elastic Beanstalk Worker Environment is designed to process background jobs. What AWS service does the Worker Tier integrate with to receive tasks?",
+        options: [
+            "Amazon Kinesis Data Streams",
+            "Amazon SQS",
+            "Amazon SNS",
+            "Amazon EventBridge"
+        ],
+        answer: 1,
+        explanation: "Worker Tier environments in Elastic Beanstalk poll messages from an Amazon SQS queue to process background tasks asynchronously[cite: 1]."
+    },
+    {
+        q: "How does an Elastic Beanstalk Worker Environment scale its instances automatically?",
+        options: [
+            "Based on the CPU utilization of the Web Environment EC2 instances",
+            "Based on the number of messages in the SQS queue",
+            "Based on HTTP request latency from the Application Load Balancer",
+            "Based on incoming bandwidth traffic in Route 53"
+        ],
+        answer: 1,
+        explanation: "Worker environments scale the Auto Scaling Group based on the queue depth (number of messages) in the associated SQS queue[cite: 1]."
+    },
+    {
+        q: "A developer wants to create a exact duplicate of an existing Elastic Beanstalk environment for testing purposes. Which Elastic Beanstalk feature should be used?",
+        options: [
+            "Replicate",
+            "Clone",
+            "Copy Environment",
+            "Duplicate Stack"
+        ],
+        answer: 1,
+        explanation: "Elastic Beanstalk allows you to Clone an environment to recreate an exact copy with the same configuration[cite: 1]."
+    },
+    {
+        q: "When cloning an Elastic Beanstalk environment that has an integrated Amazon RDS database, what happens to the database data in the cloned environment?",
+        options: [
+            "Data is fully copied from the original database to the new cloned database.",
+            "The RDS database type/configuration is cloned, but data is NOT preserved.",
+            "The cloned environment shares the exact same RDS database instance.",
+            "The clone operation fails because databases cannot be cloned."
+        ],
+        answer: 1,
+        explanation: "Cloning preserves all environment resources and configuration settings (including RDS database type), but the underlying database data is not preserved[cite: 1]."
+    },
+    {
+        q: "Which of the following configuration file extensions is valid for files placed inside the `.ebextensions/` folder?",
+        options: [
+            ".json or .config",
+            ".yaml or .config",
+            ".config only",
+            ".ebspec or .config"
+        ],
+        answer: 2,
+        explanation: "Files in `.ebextensions/` must have a `.config` file extension (e.g., `logging.config`), though their contents are formatted in YAML or JSON[cite: 1]."
+    },
+    {
+        q: "What option setting section inside an `.ebextensions` configuration file allows developers to modify default Elastic Beanstalk options?",
+        options: [
+            "option_settings",
+            "environment_variables",
+            "beanstalk_config",
+            "custom_options"
+        ],
+        answer: 0,
+        explanation: "The `option_settings` key inside `.ebextensions/*.config` files is used to define and override default Elastic Beanstalk configuration parameters[cite: 1]."
+    },
+    {
+        q: "An application update is deployed using the Immutable deployment strategy. A deployment failure occurs due to application code errors. What action does Elastic Beanstalk take to recover?",
+        options: [
+            "It automatically redeploys the previous version to the existing instances.",
+            "It terminates the temporary Auto Scaling Group, instantly reverting to the original healthy instances.",
+            "It performs a CNAME swap back to the backup environment.",
+            "It keeps the failed instances online and flags them as degraded."
+        ],
+        answer: 1,
+        explanation: "Because Immutable deployments deploy to a new temporary Auto Scaling Group, rolling back upon failure simply requires terminating the temporary ASG[cite: 1]."
+    },
+    {
+        q: "Which Elastic Beanstalk deployment method offers zero downtime and release validation capabilities, but is NOT a direct out-of-the-box deployment option selection in the Elastic Beanstalk console?",
+        options: [
+            "Traffic Splitting",
+            "Immutable",
+            "Blue / Green",
+            "Rolling with additional batch"
+        ],
+        answer: 2,
+        explanation: "Blue/Green deployment is not a direct feature/toggle in the Elastic Beanstalk deployment settings; it is achieved by creating a separate environment and performing a CNAME swap or DNS update[cite: 1]."
+    },
+    {
+        q: "A developer is configuring an Elastic Beanstalk Lifecycle Policy. To prevent loss of deployment artifacts, which setting can be enabled?",
+        options: [
+            "Option not to delete the source bundle in Amazon S3",
+            "Store source bundles in AWS CodeCommit",
+            "Backup version files to EC2 Instance Store",
+            "Replicate version artifacts to DynamoDB"
+        ],
+        answer: 0,
+        explanation: "When setting up a lifecycle policy to remove old application versions, you can choose to retain the source bundle in S3 to prevent permanent data loss[cite: 1]."
+    },
+    {
+        q: "Which deployment method deploys new application code to temporary instances, and once verified, migrates those instances into the main Auto Scaling Group before terminating old instances?",
+        options: [
+            "Traffic Splitting",
+            "Immutable",
+            "Rolling with additional batch",
+            "All at once"
+        ],
+        answer: 0,
+        explanation: "In Traffic Splitting deployment, new instances are initially placed in a temporary ASG, and after passing canary evaluation, they are migrated to the original ASG[cite: 1]."
+    },
+    {
+        q: "What is the key advantage of using AWS CloudFormation to define infrastructure as code?",
+        options: [
+            "It automatically writes application code for Java and Node.js applications.",
+            "It allows declarative outlining and provisioning of AWS resources in a predictable and ordered sequence.",
+            "It replaces the need for Application Load Balancers and Auto Scaling Groups.",
+            "It offers free compute runtime for EC2 instances."
+        ],
+        answer: 1,
+        explanation: "CloudFormation provides a declarative way to define AWS infrastructure as code, ensuring resources are created in the right order with specified configurations[cite: 1]."
+    },
+    {
+        q: "In Node.js applications deployed to Elastic Beanstalk, which file is used by Elastic Beanstalk to resolve project dependencies during the deployment process?",
+        options: [
+            "requirements.txt",
+            "package.json",
+            "buildspec.yml",
+            "ebextensions.config"
+        ],
+        answer: 1,
+        explanation: "Elastic Beanstalk uses `package.json` for Node.js applications (and `requirements.txt` for Python) to resolve dependencies upon deployment[cite: 1]."
+    },
+    {
+        q: "A developer wants to view the current configuration parameters and environment variables of a running Elastic Beanstalk environment using the CLI. Which command should be executed?",
+        options: [
+            "eb status",
+            "eb config",
+            "eb printenv",
+            "eb describe"
+        ],
+        answer: 1,
+        explanation: "The command `eb config` allows developers to display or edit the configuration options of a running Elastic Beanstalk environment[cite: 1]."
+    },
+    {
+        q: "Which deployment method has the HIGHEST temporary infrastructure cost because it provisions a full set of duplicate instances before terminating old ones?",
+        options: [
+            "All at once",
+            "Rolling",
+            "Immutable",
+            "Rolling with additional batch"
+        ],
+        answer: 2,
+        explanation: "Immutable deployments double the required capacity during deployment by creating a full set of new instances in a temporary ASG, leading to higher temporary costs[cite: 1]."
+    },
+    {
+        q: "You are setting up an Elastic Beanstalk environment for a web application. Which of the following is the responsibility of the developer under the AWS Managed Service model for Elastic Beanstalk?",
+        options: [
+            "OS patching and instance configuration",
+            "Auto Scaling Group provisioning",
+            "Application code development and packaging",
+            "Load balancer health check setup"
+        ],
+        answer: 2,
+        explanation: "With Elastic Beanstalk, AWS automatically handles capacity provisioning, scaling, load balancing, and health monitoring; the developer is only responsible for the application code[cite: 1]."
+    },
+    {
+        q: "Which EB CLI command is used to launch an interactive web browser window pointing directly to the deployed Elastic Beanstalk application URL?",
+        options: [
+            "eb launch",
+            "eb open",
+            "eb browse",
+            "eb url"
+        ],
+        answer: 1,
+        explanation: "The command `eb open` opens the domain name of the environment in your default web browser[cite: 1]."
+    },
+    {
+        q: "Which deployment strategy updates instances in batches without spinning up additional instances, but causes the application to run below full capacity during deployment?",
+        options: [
+            "Rolling",
+            "Rolling with additional batch",
+            "Immutable",
+            "Traffic Splitting"
+        ],
+        answer: 0,
+        explanation: "Rolling deployments update a few instances at a time within the existing ASG capacity without launching new instances, causing the application to operate at reduced capacity[cite: 1]."
+    },
+    {
+        q: "Which EB CLI command is used to delete and clean up all AWS resources associated with an Elastic Beanstalk environment?",
+        options: [
+            "eb delete",
+            "eb destroy",
+            "eb terminate",
+            "eb stop"
+        ],
+        answer: 2,
+        explanation: "The command `eb terminate` terminates the Elastic Beanstalk environment and deletes all associated resources provisioned for it[cite: 1]."
+    }
+        ];
+		
+		
+
+        let currentQuizQuestions = [];
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function getRandomQuestions(count) {
+            const shuffled = [...questionBank].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        function startNewQuiz() {
+            document.getElementById('score-board').style.display = 'none';
+            document.getElementById('submit-btn').style.display = 'inline-block';
+            
+            currentQuizQuestions = getRandomQuestions(10);
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            currentQuizQuestions.forEach((q, index) => {
+                const qBlock = document.createElement('div');
+                qBlock.className = 'question-block';
+                
+                let optionsHTML = '';
+                q.options.forEach((opt, oIdx) => {
+                    optionsHTML += `
+                        <li class="option-item">
+                            <label class="option-label">
+                                <input type="radio" name="q_${index}" value="${oIdx}">
+                                ${opt}
+                            </label>
+                        </li>
+                    `;
+                });
+
+                qBlock.innerHTML = `
+                    <div class="question-title">Question ${index + 1}: ${q.q}</div>
+                    <ul class="options-list">${optionsHTML}</ul>
+                    <div id="exp_${index}" class="explanation"></div>
+                `;
+                container.appendChild(qBlock);
+            });
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            currentQuizQuestions.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="q_${index}"]:checked`);
+                const expBox = document.getElementById(`exp_${index}`);
+                expBox.style.display = 'block';
+
+                if (selected) {
+                    const answer = parseInt(selected.value);
+                    if (answer === q.answer) {
+                        score++;
+                        expBox.className = 'explanation correct';
+                        expBox.innerHTML = `<strong>Correct!</strong> ${q.explanation}`;
+                    } else {
+                        expBox.className = 'explanation incorrect';
+                        expBox.innerHTML = `<strong>Incorrect.</strong> Correct Answer: <em>${q.options[q.answer]}</em><br>${q.explanation}`;
+                    }
+                } else {
+                    expBox.className = 'explanation incorrect';
+                    expBox.innerHTML = `<strong>No answer selected.</strong> Correct Answer: <em>${q.options[q.answer]}</em><br>${q.explanation}`;
+                }
+            });
+
+            const scoreBoard = document.getElementById('score-board');
+            const scoreText = document.getElementById('final-score');
+            const scoreMsg = document.getElementById('score-message');
+
+            scoreBoard.style.display = 'block';
+            scoreText.innerText = `Your Score: ${score} / 10`;
+            
+            if (score >= 8) {
+                scoreMsg.innerText = "Excellent work! You have a solid grasp of AWS Elastic Beanstalk concepts.";
+                scoreMsg.style.color = "var(--correct-green)";
+            } else {
+                scoreMsg.innerText = "Keep practicing! Review the Study Notes tab to reinforce key concepts.";
+                scoreMsg.style.color = "var(--wrong-red)";
+            }
+
+            document.getElementById('submit-btn').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Initialize quiz on load
+        window.onload = function() {
+            startNewQuiz();
+        };
+    </script>
+</body>
+</html>
