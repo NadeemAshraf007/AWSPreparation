@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS CloudFormation & DVA-C02 Prep Portal</title>
+    <style>
+        :root {
+            --primary: #232f3e;
+            --accent: #ff9900;
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-color: #16191f;
+            --correct-color: #2e7d32;
+            --incorrect-color: #c62828;
+            --border-color: #eaeded;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        nav button {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            margin-left: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        nav button.active, nav button:hover {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            width: 100%;
+            flex: 1;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Study Cards Styling */
+        .card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.4rem;
+        }
+
+        .card ul {
+            margin-left: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .card code {
+            background-color: #f1f3f5;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            color: #d63384;
+            font-family: monospace;
+        }
+
+        pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Quiz Styling */
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            background-color: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #e68a00;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .question-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+            color: var(--primary);
+        }
+
+        .options-list {
+            list-style: none;
+        }
+
+        .option-item {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .option-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .option-item.selected {
+            border-color: var(--accent);
+            background-color: #fff8e6;
+        }
+
+        .option-item.correct {
+            background-color: #e8f5e9;
+            border-color: var(--correct-color);
+            color: var(--correct-color);
+            font-weight: bold;
+        }
+
+        .option-item.incorrect {
+            background-color: #ffebee;
+            border-color: var(--incorrect-color);
+            color: var(--incorrect-color);
+        }
+
+        .explanation {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #eef3f8;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        .result-box {
+            text-align: center;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .result-box h2 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>AWS Developer Prep</h1>
+        <nav>
+            <button id="nav-study" class="active" onclick="switchTab('study')">Study Material</button>
+            <button id="nav-quiz" onclick="switchTab('quiz')">Practice Quiz (10 Random)</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- STUDY MATERIAL TAB -->
+        <div id="study-tab" class="tab-content active">
+            <div class="card">
+                <h2>CloudFormation Overview & Core Concepts</h2>
+                <ul>
+                    <li><strong>Declarative IaC:</strong> CloudFormation is a declarative way to outline your AWS infrastructure for almost all resources.</li>
+                    <li><strong>S3 Requirement:</strong> Templates must be uploaded to Amazon S3 before being referenced by CloudFormation during stack creation or updates.</li>
+                    <li><strong>Stack Management:</strong> Deleting a CloudFormation stack automatically deletes all artifacts and resources created by that stack.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Template Building Blocks</h2>
+                <ul>
+                    <li><code>AWSTemplateFormatVersion</code>: Identifies the capability version (default: "2010-09-09").</li>
+                    <li><code>Description</code>: Comments explaining the template purpose.</li>
+                    <li><code>Resources</code>: <strong>Mandatory</strong> section detailing AWS components to provision.</li>
+                    <li><code>Parameters</code>: Dynamic input parameters passed at stack execution.</li>
+                    <li><code>Mappings</code>: Hardcoded static variables ideal for mapping values by region, AZ, or environment.</li>
+                    <li><code>Outputs</code>: Exported values that can be referenced cross-stack.</li>
+                    <li><code>Conditions</code>: Logical rules determining whether resources are created.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Key Intrinsic Functions</h2>
+                <ul>
+                    <li><code>!Ref</code>: Refers to parameters or resource physical IDs.</li>
+                    <li><code>!GetAtt</code>: Fetches specific resource attributes (e.g., <code>!GetAtt MyEC2.AvailabilityZone</code>).</li>
+                    <li><code>!FindInMap</code>: Retreives a value from <code>Mappings</code> block: <code>!FindInMap [ MapName, TopKey, SecondKey ]</code>.</li>
+                    <li><code>!ImportValue</code>: Imports exported output variables from another stack.</li>
+                    <li><code>!Base64</code>: Encodes plain strings (commonly used for EC2 <code>UserData</code>).</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Deletion Policies & Features</h2>
+                <ul>
+                    <li><code>DeletionPolicy: Delete</code> (Default): Deletes the resource when the stack is destroyed (S3 buckets must be empty to succeed).</li>
+                    <li><code>DeletionPolicy: Retain</code>: Keeps the resource intact when the CloudFormation stack is removed.</li>
+                    <li><code>DeletionPolicy: Snapshot</code>: Takes a backup snapshot prior to deletion (RDS, EBS, ElastiCache, Neptune).</li>
+                    <li><strong>Stack Policies:</strong> JSON policies protecting explicit resources from accidental updates during stack modification.</li>
+                    <li><strong>Custom Resources:</strong> AWS Lambda-backed resources used for unsupported services or running custom scripts (e.g., emptying S3 buckets).</li>
+                    <li><strong>StackSets:</strong> Allows creating/updating stacks across multiple accounts and regions in a single operation.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- QUIZ TAB -->
+        <div id="quiz-tab" class="tab-content">
+            <div class="quiz-controls">
+                <div>
+                    <strong>Question <span id="current-q-num">1</span> of 10</strong>
+                </div>
+                <button class="btn" onclick="startNewQuiz()">Generate New 10-Question Test</button>
+            </div>
+
+            <div id="quiz-container">
+                <!-- Questions injected dynamically -->
+            </div>
+
+            <div id="result-box" class="result-box" style="display: none;">
+                <h2>Quiz Completed!</h2>
+                <p id="score-text" style="font-size: 1.2rem; margin-bottom: 1.5rem;"></p>
+                <button class="btn" onclick="startNewQuiz()">Try Another 10 Questions</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>AWS Certified Developer - Associate Practice Portal | CloudFormation Focus</p>
+    </footer>
+
+    <script>
+        // 50 AWS Developer Associate (DVA-C02) Style Questions
+        const questionBank = [
+            {
+                q: "Which section of an AWS CloudFormation template is mandatory?",
+                options: ["Parameters", "Mappings", "Resources", "Outputs"],
+                answer: 2,
+                exp: "'Resources' is the only mandatory section in a CloudFormation template."
+            },
+            {
+                q: "What must you do with a CloudFormation template before referencing it to create a stack?",
+                options: ["Upload it to an Amazon S3 bucket", "Deploy it to an Amazon EC2 instance", "Store it in DynamoDB", "Compile it into an AMI"],
+                answer: 0,
+                exp: "CloudFormation templates must be uploaded to S3 (either directly or automatically through the console/CLI) before stack creation."
+            },
+            {
+                q: "Which intrinsic function should you use to pass user data scripts into an EC2 instance template?",
+                options: ["Fn::GetAtt", "Fn::ImportValue", "Fn::Base64", "Fn::Sub"],
+                answer: 2,
+                exp: "EC2 UserData expects Base64 encoded strings, so Fn::Base64 (or !Base64) is commonly used."
+            },
+            {
+                q: "You want to retain an Amazon RDS DB Instance when its CloudFormation stack is deleted. Which attribute should you add?",
+                options: ["StackPolicy: Retain", "DeletionPolicy: Retain", "TerminationProtection: Enable", "UpdateReplacePolicy: Snapshot"],
+                answer: 1,
+                exp: "DeletionPolicy: Retain preserves the designated resource even if the stack is deleted."
+            },
+            {
+                q: "Which CloudFormation function allows you to import values exported by another stack?",
+                options: ["Fn::GetAtt", "Fn::Ref", "Fn::ImportValue", "Fn::FindInMap"],
+                answer: 2,
+                exp: "Fn::ImportValue (or !ImportValue) imports named output values from other cross-stack exports."
+            },
+            {
+                q: "What happens by default if a resource creation fails during CloudFormation stack creation?",
+                options: ["The stack continues building remaining resources", "The stack pauses and waits for user input", "Automatic rollback occurs, deleting created resources", "The stack converts to a StackSet"],
+                answer: 2,
+                exp: "By default, CloudFormation automatically rolls back on error and deletes all created resources."
+            },
+            {
+                q: "Which parameter setting in CloudFormation prevents database passwords from being printed in cleartext in the console/logs?",
+                options: ["Mask: true", "NoEcho: true", "Secret: true", "Encrypted: true"],
+                answer: 1,
+                exp: "Setting 'NoEcho: true' on a parameter masks the output in console logs and return calls."
+            },
+            {
+                q: "Which feature allows provisioning CloudFormation stacks across multiple AWS Accounts and AWS Regions simultaneously?",
+                options: ["Nested Stacks", "CloudFormation StackSets", "Custom Resources", "Infrastructure Composer"],
+                answer: 1,
+                exp: "CloudFormation StackSets let you create, update, or delete stacks across multiple accounts and regions in one operation."
+            },
+            {
+                q: "How can you run custom code (such as a Lambda function) during stack creation to perform logic not natively supported by CloudFormation?",
+                options: ["CloudFormation Mappings", "CloudFormation Custom Resources", "CloudFormation Stack Policies", "CloudFormation Macros"],
+                answer: 1,
+                exp: "Custom Resources (backed by AWS Lambda or SNS) allow developers to write custom provisioning logic for unsupported tasks."
+            },
+            {
+                q: "Which capability must be explicitly acknowledged in CloudFormation when deploying templates that define named IAM roles?",
+                options: ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM", "CAPABILITY_AUTO_EXPAND", "CAPABILITY_ADMIN"],
+                answer: 1,
+                exp: "CAPABILITY_NAMED_IAM must be specified if your template creates or modifies IAM resources with custom names."
+            },
+            {
+                q: "Which CloudFormation structure is best suited to retrieve AMI IDs based on the current deployment Region?",
+                options: ["Parameters", "Mappings", "Outputs", "Conditions"],
+                answer: 1,
+                exp: "Mappings are ideal for static reference maps keyed by AWS Region, Environment, or AZ."
+            },
+            {
+                q: "What DeletionPolicy setting takes a final backup of an RDS DBInstance before deleting it?",
+                options: ["DeletionPolicy: Retain", "DeletionPolicy: Backup", "DeletionPolicy: Snapshot", "DeletionPolicy: Archive"],
+                answer: 2,
+                exp: "DeletionPolicy: Snapshot creates a final snapshot before resource deletion."
+            },
+            {
+                q: "Which CLI command packages local artifacts and uploads them to S3 prior to CloudFormation deployment?",
+                options: ["aws cloudformation build", "aws cloudformation package", "aws cloudformation deploy", "aws cloudformation sync"],
+                answer: 1,
+                exp: "'aws cloudformation package' uploads local artifacts to S3 and generates an updated template."
+            },
+            {
+                q: "What JSON document can be applied to a stack to explicitly prevent updates to specific production resources?",
+                options: ["IAM Policy", "Stack Policy", "Bucket Policy", "Resource Group"],
+                answer: 1,
+                exp: "A Stack Policy is a JSON document that defines allowed/denied update actions on stack resources."
+            },
+            {
+                q: "Which intrinsic function returns the value of an item from a two-dimensional key-value table defined in the template?",
+                options: ["!Select", "!FindInMap", "!GetAtt", "!Sub"],
+                answer: 1,
+                exp: "!FindInMap returns a value corresponding to keys in the Mappings section."
+            },
+            {
+                q: "A developer wants to prevent accidental deletion of a CloudFormation stack. Which feature should be enabled?",
+                options: ["Stack Lock", "Termination Protection", "Deletion Protection", "IAM Denial Rule"],
+                answer: 1,
+                exp: "Enabling Termination Protection on a stack prevents it from being deleted until protection is disabled."
+            },
+            {
+                q: "What is the primary function of the CloudFormation helper function Fn::Sub?",
+                options: ["Substitutes variables in an input string with values you specify", "Subtracts numbers in conditions", "Submits a stack update", "Sub-selects list items"],
+                answer: 0,
+                exp: "Fn::Sub (or !Sub) substitutes string variables like ${AWS::Region} or ${MyResource} inside template strings."
+            },
+            {
+                q: "Which pseudo parameter returns the AWS Region in which the encompassing resource is being created?",
+                options: ["AWS::Region", "AWS::RegionName", "AWS::CurrentRegion", "AWS::Location"],
+                answer: 0,
+                exp: "AWS::Region returns the AWS Region name string (e.g., us-east-1)."
+            },
+            {
+                q: "An S3 bucket created by CloudFormation fails to delete during stack teardown. What is the most likely cause?",
+                options: ["The bucket has Versioning enabled", "The bucket contains objects", "The bucket policy is missing", "S3 buckets require a Custom Resource for deletion"],
+                answer: 1,
+                exp: "CloudFormation cannot delete an S3 bucket if it still contains objects."
+            },
+            {
+                q: "Which SAM CLI command is used to run a serverless application locally for testing?",
+                options: ["sam test", "sam local invoke", "sam run", "sam execute"],
+                answer: 1,
+                exp: "'sam local invoke' (or 'sam local start-api') allows executing Lambda functions locally."
+            },
+            {
+                q: "In CloudFormation, how do you specify conditional creation of resources?",
+                options: ["Using the Mappings section", "Using Conditions section and attaching 'Condition:' tag to resources", "Using Python logic in Parameters", "Using Stack Policies"],
+                answer: 1,
+                exp: "Conditions are declared under 'Conditions' and assigned to resources using the 'Condition:' key."
+            },
+            {
+                q: "Which function gets the physical ID or parameter value of a target in CloudFormation?",
+                options: ["!Ref", "!GetAtt", "!Import", "!Value"],
+                answer: 0,
+                exp: "!Ref returns the parameter value or the primary physical ID of a resource."
+            },
+            {
+                q: "Which statement accurately describes CloudFormation template updates?",
+                options: ["Existing templates can be edited directly on AWS servers", "Updates require uploading a new version of the template", "Templates update automatically from Git commits without pipelines", "Templates cannot be modified once applied"],
+                answer: 1,
+                exp: "You update stacks by supplying an updated template or modifying parameters via new deployments."
+            },
+            {
+                q: "Which IAM mechanism allows users without direct EC2 permissions to create stack resources safely?",
+                options: ["CloudFormation Service Role", "IAM User Credentials", "AWS STS AssumeRole", "Cross-Account Trust"],
+                answer: 0,
+                exp: "A CloudFormation Service Role allows CloudFormation to create/update resources on behalf of the user."
+            },
+            {
+                q: "What exception occurs if a CloudFormation template uses Macros or Nested Stacks but missing CAPABILITY_AUTO_EXPAND?",
+                options: ["InsufficientCapabilitiesException", "StackValidationError", "MacroNotFoundException", "InvalidTemplateException"],
+                answer: 0,
+                exp: "InsufficientCapabilitiesException is thrown when required capabilities are not explicitly provided."
+            },
+            {
+                q: "Which parameter type helps validate inputs against actual resources in the AWS account?",
+                options: ["AWS-Specific Parameter", "SSM Parameter", "CommaDelimitedList", "String"],
+                answer: 0,
+                exp: "AWS-Specific parameters (e.g. AWS::EC2::VPC::Id) validate input against existing account resources."
+            },
+            {
+                q: "Which tool allows visual drag-and-drop creation and editing of AWS CloudFormation templates?",
+                options: ["AWS Infrastructure Composer", "AWS CodePipeline", "AWS CloudTrail", "AWS App Runner"],
+                answer: 0,
+                exp: "AWS Infrastructure Composer (formerly CloudFormation Designer) provides visual template composition."
+            },
+            {
+                q: "What function can split a string into a list of values based on a delimiter in CloudFormation?",
+                options: ["Fn::Split", "!Select", "!Join", "!Sub"],
+                answer: 0,
+                exp: "Fn::Split splits a string into a list of strings based on a specified delimiter."
+            },
+            {
+                q: "To concatenate a list of strings with a delimiter in CloudFormation, which function is used?",
+                options: ["Fn::Join", "Fn::Concat", "Fn::Merge", "Fn::Append"],
+                answer: 0,
+                exp: "Fn::Join joins a set of values with a specified delimiter."
+            },
+            {
+                q: "What is the return value of AWS::NoValue pseudo parameter in CloudFormation?",
+                options: ["Null string", "Removes the corresponding resource property", "Throws an error", "Returns zero"],
+                answer: 1,
+                exp: "When passed as a value in Fn::If, AWS::NoValue removes the corresponding resource property."
+            },
+            {
+                q: "Which AWS service stores encrypted application secrets that can be directly referenced in CloudFormation parameters?",
+                options: ["AWS Systems Manager Parameter Store / Secrets Manager", "Amazon S3", "DynamoDB", "AWS KMS Key Registry"],
+                answer: 0,
+                exp: "SSM Parameter Store and Secrets Manager integrate with CloudFormation parameter types."
+            },
+            {
+                q: "What strategy allows fast Elastic Beanstalk updates with zero downtime by deploying new instances alongside old ones?",
+                options: ["All at once", "Rolling", "Immutable", "In-place"],
+                answer: 2,
+                exp: "Immutable deployments deploy new instances in a separate auto scaling group to ensure clean zero-downtime rollouts."
+            },
+            {
+                q: "What SQS queue attribute prevents multiple consumers from receiving the same message concurrently?",
+                options: ["DelaySeconds", "VisibilityTimeout", "ReceiveMessageWaitTimeSeconds", "RetentionPeriod"],
+                answer: 1,
+                exp: "VisibilityTimeout hides a processed message from other consumers during its timeout window."
+            },
+            {
+                q: "How can an SQS queue decrease request costs and CPU consumption from empty polling responses?",
+                options: ["Use Short Polling", "Enable Long Polling (ReceiveMessageWaitTimeSeconds > 0)", "Increase Batch Size", "Enable Dead Letter Queues"],
+                answer: 1,
+                exp: "Long polling waits until messages arrive in the queue before returning, reducing empty polling costs."
+            },
+            {
+                q: "Which DynamoDB API operation retrieves items using primary key queries efficiently?",
+                options: ["Scan", "Query", "BatchGetItem", "GetRecords"],
+                answer: 1,
+                exp: "Query finds items based on primary key values and is far more efficient than Scan."
+            },
+            {
+                q: "What maximum size can a single DynamoDB item be?",
+                options: ["100 KB", "400 KB", "1 MB", "2 GB"],
+                answer: 1,
+                exp: "The maximum item size in DynamoDB is 400 KB."
+            },
+            {
+                q: "What is the default concurrency limit for AWS Lambda functions per region in an account?",
+                options: ["100", "500", "1,000", "10,000"],
+                answer: 2,
+                exp: "The default unreserved concurrency quota for AWS Lambda is 1,000 per region."
+            },
+            {
+                q: "Which header must be set in an Amazon S3 PutObject API call to enforce Server-Side Encryption with S3-managed keys (SSE-S3)?",
+                options: ["x-amz-server-side-encryption: AES256", "x-amz-server-side-encryption: aws:kms", "x-amz-encryption: enabled", "Authorization: Bearer"],
+                answer: 0,
+                exp: "SSE-S3 requires the request header 'x-amz-server-side-encryption: AES256'."
+            },
+            {
+                q: "Which service enables tracing and debugging distributed microservice calls across AWS applications?",
+                options: ["AWS CloudTrail", "Amazon CloudWatch", "AWS X-Ray", "AWS AppConfig"],
+                answer: 2,
+                exp: "AWS X-Ray collects metadata and traces end-to-end request flows across distributed services."
+            },
+            {
+                q: "How can an application running on an EC2 instance securely obtain credentials to access AWS S3?",
+                options: ["Embed AWS keys in source code", "Store credentials in environment variables", "Attach an IAM Role to the EC2 Instance Profile", "Store keys in public S3 bucket"],
+                answer: 2,
+                exp: "Attaching an IAM Role to an Instance Profile lets EC2 automatically obtain temporary security credentials."
+            },
+            {
+                q: "Which AWS SAM command builds and packages serverless dependencies into deployment artifacts?",
+                options: ["sam build", "sam init", "sam deploy", "sam validate"],
+                answer: 0,
+                exp: "'sam build' processes the SAM template and constructs deployment dependencies in local build directories."
+            },
+            {
+                q: "What deployment policy shifts traffic in 2 fixed increments for Lambda version updates?",
+                options: ["Canary", "Linear", "AllAtOnce", "Immutable"],
+                answer: 0,
+                exp: "Canary traffic shifting moves a percentage of traffic initially and the remainder after a specified period."
+            },
+            {
+                q: "Which feature in API Gateway helps protect backend services from being overwhelmed by traffic spikes?",
+                options: ["Stage Variables", "Throttling (Rate and Burst limits)", "Usage Plans", "CORS Configuration"],
+                answer: 1,
+                exp: "Throttling sets rate and burst limits on API Gateway stages or routes."
+            },
+            {
+                q: "In Lambda, what mechanism holds shared database connections across multiple function invocations?",
+                options: ["Execution context outside handler", "Environment variables", "Lambda Layers", "Provisioned Concurrency"],
+                answer: 0,
+                exp: "Objects declared outside the event handler method remain initialized in memory across re-used contexts."
+            },
+            {
+                q: "What type of DynamoDB index can be created after table creation with a different partition key?",
+                options: ["Local Secondary Index (LSI)", "Global Secondary Index (GSI)", "Primary Hash Key", "Composite Index"],
+                answer: 1,
+                exp: "GSIs can be created anytime (at or after creation) and support alternate partition and sort keys."
+            },
+            {
+                q: "Which SQS feature prevents duplicate message processing in FIFO queues?",
+                options: ["MessageDeduplicationId", "DelaySeconds", "VisibilityTimeout", "SequenceNumber"],
+                answer: 0,
+                exp: "MessageDeduplicationId uniquely identifies a message to prevent duplicates within a 5-minute deduplication interval."
+            },
+            {
+                q: "What HTTP response code represents API Gateway execution or mapping errors?",
+                options: ["200 OK", "400 Bad Request", "502 Bad Gateway / 504 Gateway Timeout", "403 Forbidden"],
+                answer: 2,
+                exp: "502 / 504 status codes indicate backend integration or timeout issues in API Gateway."
+            },
+            {
+                q: "Which CodeDeploy file defines hook lifecycle scripts for deploying applications to EC2?",
+                options: ["buildspec.yml", "appspec.yml", "template.yaml", "dockerrun.aws.json"],
+                answer: 1,
+                exp: "CodeDeploy relies on 'appspec.yml' placed at the root of the application directory."
+            },
+            {
+                q: "Which AWS CodeBuild file specifies build phases, runtime versions, and commands?",
+                options: ["appspec.yml", "buildspec.yml", "Dockerfile", "samconfig.toml"],
+                answer: 1,
+                exp: "CodeBuild uses 'buildspec.yml' to execute build commands and artifacts generation."
+            },
+            {
+                q: "Which CloudFormation intrinsic function resolves JSON string structures into CloudFormation parameters?",
+                options: ["Fn::ToJsonString", "Fn::Transform", "Fn::Sub", "Fn::GetAZs"],
+                answer: 0,
+                exp: "Fn::ToJsonString converts an object or structure to a JSON-formatted string."
+            }
+        ];
+
+        let selectedQuestions = [];
+        let userAnswers = {};
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
+
+            if(tab === 'study') {
+                document.getElementById('study-tab').classList.add('active');
+                document.getElementById('nav-study').classList.add('active');
+            } else {
+                document.getElementById('quiz-tab').classList.add('active');
+                document.getElementById('nav-quiz').classList.add('active');
+                if (selectedQuestions.length === 0) {
+                    startNewQuiz();
+                }
+            }
+        }
+
+        function startNewQuiz() {
+            // Shuffle and pick 10 random questions
+            const shuffled = [...questionBank].sort(() => 0.5 - Math.random());
+            selectedQuestions = shuffled.slice(0, 10);
+            userAnswers = {};
+
+            document.getElementById('result-box').style.display = 'none';
+            renderQuiz();
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            selectedQuestions.forEach((q, qIndex) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+
+                let optionsHTML = '';
+                q.options.forEach((opt, oIndex) => {
+                    optionsHTML += `
+                        <li class="option-item" id="opt-${qIndex}-${oIndex}" onclick="selectOption(${qIndex}, ${oIndex})">
+                            ${opt}
+                        </li>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <h3>Q${qIndex + 1}: ${q.q}</h3>
+                    <ul class="options-list">${optionsHTML}</ul>
+                    <div class="explanation" id="exp-${qIndex}">
+                        <strong>Explanation:</strong> ${q.exp}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            const submitBtn = document.createElement('button');
+            submitBtn.className = 'btn';
+            submitBtn.innerText = 'Submit Quiz Answers';
+            submitBtn.style.marginTop = '1rem';
+            submitBtn.onclick = evaluateQuiz;
+            container.appendChild(submitBtn);
+        }
+
+        function selectOption(qIndex, oIndex) {
+            if (userAnswers[qIndex] !== undefined && userAnswers.submitted) return;
+
+            userAnswers[qIndex] = oIndex;
+
+            // Highlight selection
+            const opts = document.querySelectorAll(`[id^="opt-${qIndex}-"]`);
+            opts.forEach(el => el.classList.remove('selected'));
+            document.getElementById(`opt-${qIndex}-${oIndex}`).classList.add('selected');
+        }
+
+        function evaluateQuiz() {
+            if (Object.keys(userAnswers).length < selectedQuestions.length) {
+                alert("Please answer all 10 questions before submitting!");
+                return;
+            }
+
+            userAnswers.submitted = true;
+            let score = 0;
+
+            selectedQuestions.forEach((q, qIndex) => {
+                const selected = userAnswers[qIndex];
+                const correct = q.answer;
+
+                const selectedEl = document.getElementById(`opt-${qIndex}-${selected}`);
+                const correctEl = document.getElementById(`opt-${qIndex}-${correct}`);
+
+                if (selected === correct) {
+                    score++;
+                    selectedEl.classList.add('correct');
+                } else {
+                    selectedEl.classList.add('incorrect');
+                    correctEl.classList.add('correct');
+                }
+
+                document.getElementById(`exp-${qIndex}`).style.display = 'block';
+            });
+
+            const resultBox = document.getElementById('result-box');
+            const scoreText = document.getElementById('score-text');
+            scoreText.innerText = `You scored ${score} out of 10 (${(score / 10) * 100}%)`;
+            resultBox.style.display = 'block';
+            resultBox.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

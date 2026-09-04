@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Certified Developer - Database & Caching Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-cloud text-amber-500 text-2xl"></i>
+                <span class="font-bold text-lg text-white">AWS Developer Prep: <span class="text-amber-400">DB & Caching</span></span>
+            </div>
+            <nav class="flex space-x-4">
+                <button onclick="switchTab('study')" id="tab-study" class="px-4 py-2 rounded-lg font-medium bg-amber-500 text-slate-900 hover:bg-amber-400 transition">
+                    <i class="fa-solid fa-book-open mr-2"></i>Study Notes
+                </button>
+                <button onclick="switchTab('quiz')" id="tab-quiz" class="px-4 py-2 rounded-lg font-medium bg-slate-700 text-slate-300 hover:bg-slate-600 transition">
+                    <i class="fa-solid fa-graduation-cap mr-2"></i>Practice Quiz (10 Random)
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- SECTION 1: STUDY NOTES -->
+        <div id="section-study" class="space-y-8">
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                <h2 class="text-2xl font-bold text-amber-400 mb-2">AWS Databases & Caching Notes</h2>
+                <p class="text-slate-300">Detailed summary based on Stephane Maarek's AWS Certified Developer material covering RDS, Aurora, RDS Proxy, ElastiCache, and MemoryDB.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- RDS Overview & Auto Scaling -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 card-hover space-y-3">
+                    <h3 class="text-xl font-bold text-amber-400 border-b border-slate-700 pb-2"><i class="fa-solid fa-database mr-2"></i>1. Amazon RDS Fundamentals</h3>
+                    <ul class="text-slate-300 space-y-2 text-sm list-disc list-inside">
+                        <li><strong>Managed Engines:</strong> Postgres, MySQL, MariaDB, Oracle, MS SQL Server, DB2, Aurora.</li>
+                        <li><strong>Managed Benefits:</strong> Provisioning, patching, PITR automated backups, monitoring, scaling.</li>
+                        <li><strong>SSH Limit:</strong> You <em>cannot</em> SSH into standard RDS instances.</li>
+                        <li><strong>Storage Auto Scaling:</strong> Scales dynamically when free storage &lt; 10% for 5+ mins, 6 hours elapsed since last change, and Max Threshold is set.</li>
+                    </ul>
+                </div>
+
+                <!-- Read Replicas vs Multi-AZ -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 card-hover space-y-3">
+                    <h3 class="text-xl font-bold text-amber-400 border-b border-slate-700 pb-2"><i class="fa-solid fa-network-wired mr-2"></i>2. Read Replicas vs. Multi-AZ</h3>
+                    <ul class="text-slate-300 space-y-2 text-sm list-disc list-inside">
+                        <li><strong>Read Replicas:</strong> Up to 15; Asynchronous replication; used for read scaling (SELECTs); can be Cross-AZ or Cross-Region (Cross-Region incurs network fees).</li>
+                        <li><strong>Multi-AZ (DR):</strong> Synchronous replication; single DNS endpoint; automatic failover for high availability; not used for scaling.</li>
+                        <li><strong>Single to Multi-AZ:</strong> Zero-downtime operation (takes snapshot, restores to new AZ, synchronizes).</li>
+                    </ul>
+                </div>
+
+                <!-- Amazon Aurora -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 card-hover space-y-3">
+                    <h3 class="text-xl font-bold text-amber-400 border-b border-slate-700 pb-2"><i class="fa-solid fa-bolt mr-2"></i>3. Amazon Aurora</h3>
+                    <ul class="text-slate-300 space-y-2 text-sm list-disc list-inside">
+                        <li><strong>Performance:</strong> Proprietary AWS DB; 5x MySQL performance, 3x Postgres performance.</li>
+                        <li><strong>Resilience:</strong> 6 copies across 3 AZs (requires 4/6 for writes, 3/6 for reads). Storage auto-expands from 10 GB up to 128 TB / 256 TB.</li>
+                        <li><strong>Endpoints:</strong> Writer Endpoint (points to master) and Reader Endpoint (connection load balancing across replicas).</li>
+                        <li><strong>Features:</strong> Sub-10ms replica lag, zero-downtime patching, and Backtrack (PITR without backups).</li>
+                    </ul>
+                </div>
+
+                <!-- Security & RDS Proxy -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 card-hover space-y-3">
+                    <h3 class="text-xl font-bold text-amber-400 border-b border-slate-700 pb-2"><i class="fa-solid fa-shield-halved mr-2"></i>4. RDS Proxy & Security</h3>
+                    <ul class="text-slate-300 space-y-2 text-sm list-disc list-inside">
+                        <li><strong>RDS Proxy:</strong> Serverless pool manager; reduces CPU/RAM load; cuts failover time by up to 66%; must be accessed inside a VPC (never public).</li>
+                        <li><strong>At-Rest Encryption:</strong> AWS KMS required at creation. Unencrypted DBs must be encrypted via snapshot and restore.</li>
+                        <li><strong>Auth & Audit:</strong> Supports IAM DB authentication (credentials in Secrets Manager) and CloudWatch Audit Logs.</li>
+                    </ul>
+                </div>
+
+                <!-- ElastiCache Overview & Engines -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 card-hover space-y-3">
+                    <h3 class="text-xl font-bold text-amber-400 border-b border-slate-700 pb-2"><i class="fa-solid fa-memory mr-2"></i>5. ElastiCache: Redis vs. Memcached</h3>
+                    <ul class="text-slate-300 space-y-2 text-sm list-disc list-inside">
+                        <li><strong>Purpose:</strong> In-memory database with sub-millisecond latency for read-heavy workloads or session management.</li>
+                        <li><strong>Redis:</strong> Multi-AZ with Auto-Failover, Read Replicas, Data Durability (AOF), backups, and complex types (Sets/Sorted Sets).</li>
+                        <li><strong>Memcached:</strong> Pure in-memory (no persistence), multi-threaded, multi-node data partitioning (sharding), no native HA.</li>
+                    </ul>
+                </div>
+
+                <!-- Caching Strategies & MemoryDB -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 card-hover space-y-3">
+                    <h3 class="text-xl font-bold text-amber-400 border-b border-slate-700 pb-2"><i class="fa-solid fa-sliders mr-2"></i>6. Caching Strategies & MemoryDB</h3>
+                    <ul class="text-slate-300 space-y-2 text-sm list-disc list-inside">
+                        <li><strong>Lazy Loading (Cache-Aside):</strong> Reads cache first; miss triggers DB query and cache update. Avoids clutter, but incurs a 3-round-trip penalty on misses.</li>
+                        <li><strong>Write-Through:</strong> DB and cache are updated simultaneously on write. Ensures fresh data, but adds write latency and potential cache churn.</li>
+                        <li><strong>TTL & Eviction:</strong> Items are removed explicitly, via LRU on full memory, or via Time-To-Live expiration.</li>
+                        <li><strong>MemoryDB for Redis:</strong> Durable in-memory database using a Multi-AZ transactional log for microservices.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: PRACTICE QUIZ -->
+        <div id="section-quiz" class="hidden space-y-6">
+            <!-- Quiz Control Panel -->
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-amber-400">AWS Developer Practice Quiz</h2>
+                    <p class="text-slate-400 text-sm">Attempting 10 random scenario-based questions from a bank of 50.</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="startNewQuiz()" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold rounded-lg transition shadow-lg">
+                        <i class="fa-solid fa-rotate-right mr-2"></i>New Random Quiz
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Questions Output Box -->
+            <div id="quiz-container" class="space-y-6"></div>
+
+            <!-- Quiz Results Banner -->
+            <div id="quiz-results" class="hidden bg-slate-800 p-6 rounded-xl border border-slate-700 text-center space-y-4">
+                <h3 class="text-2xl font-bold text-white">Quiz Completed!</h3>
+                <div id="score-display" class="text-4xl font-extrabold text-amber-400"></div>
+                <p id="score-feedback" class="text-slate-300"></p>
+                <button onclick="startNewQuiz()" class="px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold rounded-lg transition">
+                    Try Another 10 Questions
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- JavaScript Data & Engine -->
+    <script>
+        // 50 AWS Certified Developer Level Practice Questions
+        const questionBank = [
+            {
+                q: "A developer is building an application that uses Amazon RDS for MySQL. The database experiences sudden spikes in read traffic, causing high latency. Which strategy will resolve this issue with minimal application code modifications?",
+                options: ["Create an Amazon RDS Read Replica and update the application's query endpoints for read operations.", "Migrate the database to Amazon ElastiCache for Memcached.", "Enable Multi-AZ deployment on the RDS instance.", "Configure RDS Storage Auto Scaling."],
+                answer: 0,
+                explain: "RDS Read Replicas are designed specifically to scale read-heavy workloads by offloading SELECT queries from the primary instance."
+            },
+            {
+                q: "A company's serverless application built on AWS Lambda experiences database connection timeouts during traffic spikes due to connection limits on their RDS PostgreSQL instance. What should be added to resolve this efficiently?",
+                options: ["An Auto Scaling Group for Lambda.", "Amazon RDS Proxy to pool and share database connections.", "A Cross-Region Read Replica.", "Amazon ElastiCache in Write-Through mode."],
+                answer: 1,
+                explain: "RDS Proxy allows serverless applications like AWS Lambda to pool and share database connections, maintaining efficiency and preventing connection limits from being exhausted."
+            },
+            {
+                q: "An application requires an in-memory datastore with support for complex data types like Sorted Sets and Geospatial indexes, as well as high availability across Availability Zones. Which service fits these criteria?",
+                options: ["Amazon ElastiCache for Memcached", "Amazon ElastiCache for Redis", "Amazon RDS for PostgreSQL", "Amazon Aurora Write Endpoint"],
+                answer: 1,
+                explain: "ElastiCache for Redis supports complex data structures (Sets, Sorted Sets, Hashes) and offers Multi-AZ deployments with automatic failover."
+            },
+            {
+                q: "A developer needs to convert an existing unencrypted RDS DB instance into an encrypted one. What is the correct procedure to achieve this?",
+                options: ["Modify the RDS instance directly in the AWS console and check 'Enable Encryption'.", "Enable encryption using an AWS IAM policy attached to the database role.", "Create a snapshot of the unencrypted database, copy the snapshot with encryption enabled, and restore a new database instance from the encrypted snapshot.", "Attach an AWS KMS Key to the VPC subnet containing the database."],
+                answer: 2,
+                explain: "Encryption at rest must be specified at database creation. For an existing unencrypted database, you must take a snapshot, copy it with KMS encryption enabled, and restore it."
+            },
+            {
+                q: "An e-commerce application uses Amazon Aurora MySQL. The application needs to perform analytical queries without impacting write operations on the primary master instance. Which Aurora endpoint should the reporting tool connect to?",
+                options: ["Writer Endpoint", "Cluster Endpoint", "Reader Endpoint", "Instance Endpoint for Master"],
+                answer: 2,
+                explain: "The Reader Endpoint balances incoming connection requests across all available Aurora Read Replicas, insulating the master writer instance."
+            },
+            {
+                q: "A developer wants to ensure that cached data in Amazon ElastiCache is updated immediately whenever the underlying database is modified, avoiding stale reads at the cost of additional write latency. Which caching strategy should be implemented?",
+                options: ["Lazy Loading (Cache-Aside)", "Write-Through Caching", "TTL Expiration Caching", "Explicit Deletion Strategy"],
+                answer: 1,
+                explain: "Write-Through caching writes data to both the database and the cache simultaneously, ensuring cache freshness at the expense of a write penalty."
+            },
+            {
+                q: "An application requires an in-memory caching layer. The data changes infrequently, and the developer wants to ensure that only requested data is cached to save memory. What strategy should be used?",
+                options: ["Write-Through", "Lazy Loading (Cache-Aside)", "Strict Time-To-Live (TTL)", "MemoryDB Replication"],
+                answer: 1,
+                explain: "Lazy Loading caches data only when a cache miss occurs, ensuring that unused data does not occupy cache memory space."
+            },
+            {
+                q: "A database administrator notices that an RDS instance's storage space is running low due to unpredictable application usage patterns. Which feature dynamically expands RDS disk capacity?",
+                options: ["Storage Auto Scaling", "RDS Multi-AZ Failover", "Aurora Backtrack", "RDS Read Replica Scaling"],
+                answer: 0,
+                explain: "RDS Storage Auto Scaling automatically increases database storage when free space drops below 10% for at least 5 minutes."
+            },
+            {
+                q: "Which Aurora feature allows a developer to restore a database to a specific point in time in seconds, without using traditional backup snapshots?",
+                options: ["Multi-AZ Failover", "Aurora Backtrack", "RDS Proxy", "Auto Scaling Replicas"],
+                answer: 1,
+                explain: "Aurora Backtrack allows you to rewind an Aurora database cluster to a previous time without creating a new cluster from a backup."
+            },
+            {
+                q: "How does Amazon Aurora achieve high availability and durability across its storage layer?",
+                options: ["By maintaining 2 copies of data in 1 Availability Zone.", "By replicating data synchronously to an AWS Outpost.", "By storing 6 copies of data across 3 Availability Zones.", "By running 15 master instances simultaneously across 3 regions."],
+                answer: 2,
+                explain: "Amazon Aurora automatically replicates all data 6 ways across 3 Availability Zones (2 copies per AZ) to ensure high durability and availability."
+            },
+            {
+                q: "A developer needs an in-memory database that is fully compatible with Redis and provides ultra-fast performance alongside a durable Multi-AZ transactional log. Which AWS service is best suited?",
+                options: ["Amazon ElastiCache for Memcached", "Amazon MemoryDB for Redis", "Amazon DynamoDB DAX", "Amazon RDS for PostgreSQL"],
+                answer: 1,
+                explain: "Amazon MemoryDB for Redis combines Redis compatibility with durability using a Multi-AZ transactional log."
+            },
+            {
+                q: "Which of the following database options allows developer access via SSH to the underlying operating system?",
+                options: ["Amazon RDS for MySQL", "Amazon Aurora PostgreSQL", "Amazon EC2 hosted Database", "Amazon ElastiCache"],
+                answer: 2,
+                explain: "Amazon RDS is a fully managed service where host SSH access is strictly disabled. Hosting a database on EC2 allows full root and SSH control."
+            },
+            {
+                q: "What is the replication mechanism used by RDS Read Replicas within the same region?",
+                options: ["Synchronous Replication", "Asynchronous Replication", "Batch Snapshot Uploads", "Peer-to-Peer Journaling"],
+                answer: 1,
+                explain: "RDS Read Replicas rely on asynchronous replication, which means reads from replicas are eventually consistent."
+            },
+            {
+                q: "A developer is configuring RDS Multi-AZ deployments for a production environment. How does the application connect to the standby database during a failover event?",
+                options: ["The application must change its connection URL to the IP address of the standby DB.", "The application continues using the same CNAME/DNS endpoint, which automatically points to the new primary instance.", "The application uses an S3 pre-signed URL to route traffic.", "The application triggers an AWS Lambda function to rewrite its configuration files."],
+                answer: 1,
+                explain: "During a failover, AWS RDS modifies the CNAME record of the database endpoint to point to the newly promoted standby instance seamlessly."
+            },
+            {
+                q: "A company wants to manage session state for a stateless web application across multiple compute instances. Which AWS service provides a fast, managed session store?",
+                options: ["Amazon S3", "Amazon ElastiCache", "Amazon RDS Multi-AZ", "AWS Secrets Manager"],
+                answer: 1,
+                explain: "Amazon ElastiCache (Redis or Memcached) is commonly used to store HTTP user sessions for stateless applications due to its low latency."
+            },
+            {
+                q: "What is a downside of implementing the Lazy Loading caching pattern on its own?",
+                options: ["Data in the cache can become stale if updated in the primary DB without cache invalidation.", "The cache fills up rapidly with data that is never requested.", "Every write operation requires two network calls.", "It requires Aurora Backtrack to be explicitly configured."],
+                answer: 0,
+                explain: "Because Lazy Loading only updates the cache when a cache miss occurs, updates in the database can leave stale data in the cache unless a TTL or invalidation strategy is used."
+            },
+            {
+                q: "In Amazon Aurora, how many storage quorum writes are required to confirm a successful write operation?",
+                options: ["2 out of 6", "3 out of 6", "4 out of 6", "6 out of 6"],
+                answer: 2,
+                explain: "Aurora storage requires a write quorum of 4 out of 6 storage copies across 3 AZs to confirm a successful write."
+            },
+            {
+                q: "Which of the following is true regarding cross-region RDS Read Replicas?",
+                options: ["Cross-region replication network traffic is free.", "Cross-region replication network traffic incurs data transfer fees.", "Replication across regions is synchronous.", "Replicas cannot be promoted to stand-alone databases."],
+                answer: 1,
+                explain: "While intra-region replication traffic between AZs is free for RDS Read Replicas, cross-region replication incurs standard AWS network data transfer charges."
+            },
+            {
+                q: "A developer needs multi-threaded in-memory processing and simple key-value string caching without needing data replication or persistence. Which engine should be selected?",
+                options: ["ElastiCache for Redis", "ElastiCache for Memcached", "Amazon MemoryDB", "Amazon Aurora Serverless"],
+                answer: 1,
+                explain: "Memcached features a multi-threaded architecture optimized for pure in-memory performance without advanced features like persistence or replication."
+            },
+            {
+                q: "To authenticate to an Amazon RDS MySQL instance without managing hardcoded database passwords in application code, which mechanism should be used?",
+                options: ["AWS KMS Direct Signing", "IAM Database Authentication with AWS Secrets Manager", "AWS STS Web Identity Federation", "VPC Security Group Rules"],
+                answer: 1,
+                explain: "IAM Database Authentication allows applications to connect to RDS using IAM tokens, with credentials managed securely via AWS Secrets Manager."
+            },
+            {
+                q: "When converting a Single-AZ RDS deployment to a Multi-AZ deployment, what action does RDS take internally?",
+                options: ["It shuts down the database for 30 minutes to copy files.", "It takes a snapshot of the primary DB, restores it in another AZ, and establishes synchronous replication.", "It provisions an Aurora cluster automatically.", "It creates an asynchronous Read Replica in another region."],
+                answer: 1,
+                explain: "Converting from Single-AZ to Multi-AZ is a zero-downtime operation that creates a snapshot, restores it in a new AZ, and syncs the two DBs."
+            },
+            {
+                q: "An application experiences high read latency due to cache miss penalties when using Lazy Loading. Which mitigation strategy can help keep data fresh without high miss penalties?",
+                options: ["Combining Lazy Loading with a Write-Through strategy.", "Increasing the database instance size.", "Disabling TTL on all keys.", "Switching to Memcached sharding."],
+                answer: 0,
+                explain: "Combining Lazy Loading with Write-Through ensures that items are refreshed in the cache whenever updated, avoiding cache misses on frequently written data."
+            },
+            {
+                q: "What is the maximum number of Aurora Read Replicas that can be attached to an Aurora DB cluster?",
+                options: ["5", "10", "15", "20"],
+                answer: 2,
+                explain: "Amazon Aurora supports up to 15 Read Replicas per cluster for read scaling and high availability."
+            },
+            {
+                q: "What network security restriction applies strictly to Amazon RDS Proxy?",
+                options: ["It must be exposed directly to the public internet.", "It must be hosted within a VPC and cannot be made publicly accessible.", "It requires a CloudFront distribution for connection termination.", "It only accepts traffic over HTTP port 80."],
+                answer: 1,
+                explain: "RDS Proxy cannot be made publicly accessible; it must reside within the VPC of your application services."
+            },
+            {
+                q: "Which caching engine supports data persistence via AOF (Append Only File) and snapshotting?",
+                options: ["ElastiCache for Memcached", "ElastiCache for Redis", "Amazon CloudFront", "RDS Proxy Caching"],
+                answer: 1,
+                explain: "ElastiCache for Redis supports persistence strategies including snapshots (RDB) and Append Only Files (AOF)."
+            },
+            {
+                q: "An application using ElastiCache experiences frequent memory exhaustion evictions. What is the recommended operational solution?",
+                options: ["Scale up or scale out the ElastiCache cluster.", "Disable Time-To-Live (TTL) on all keys.", "Switch to RDS Multi-AZ.", "Enable Aurora Backtrack."],
+                answer: 0,
+                explain: "If memory exhaustion causes unwanted evictions of active keys (LRU), you should scale up (larger node size) or scale out (more nodes/shards)."
+            },
+            {
+                q: "Which database statement types are supported on an RDS Read Replica?",
+                options: ["INSERT and UPDATE only", "SELECT statements only", "ALTER TABLE and DROP TABLE only", "All DDL and DML commands"],
+                answer: 1,
+                explain: "RDS Read Replicas are read-only and process SELECT statements. Data modification commands (INSERT, UPDATE, DELETE) are executed on the primary master."
+            },
+            {
+                q: "What happens to client application connections when an RDS Proxy undergoes a failover event?",
+                options: ["Connections are terminated immediately and throw 500 errors.", "RDS Proxy preserves client connections while automatically routing backend requests to the new primary DB instance.", "The proxy requires a manual restart via AWS CLI.", "Client connections are redirected to Amazon S3."],
+                answer: 1,
+                explain: "RDS Proxy handles failovers seamlessly by holding client connections while switching traffic to the standby instance in the background."
+            },
+            {
+                q: "Which metric threshold must be met for RDS Storage Auto Scaling to trigger?",
+                options: ["Free disk space &lt; 10% for at least 5 minutes", "CPU utilization &gt; 80% for 1 hour", "Read IOPS &gt; 10,000 for 15 minutes", "Network throughput &lt; 1 MB/s for 10 minutes"],
+                answer: 0,
+                explain: "RDS Auto Scaling triggers when remaining free storage space falls below 10% of the allocated capacity for 5 consecutive minutes."
+            },
+            {
+                q: "What is a main advantage of Amazon Aurora storage architecture over traditional RDS storage?",
+                options: ["Aurora uses EBS volumes attached directly to single EC2 instances.", "Aurora storage auto-expands in increments up to 128 TB / 256 TB and is striped across hundreds of volumes across 3 AZs.", "Aurora does not support multi-region deployments.", "Aurora requires manual backup configuration for disaster recovery."],
+                answer: 1,
+                explain: "Aurora storage is cloud-optimized, distributed, self-healing, and dynamically grows up to 128 TB / 256 TB."
+            },
+            {
+                q: "Which authentication strategy allows an application to connect to Amazon RDS PostgreSQL using short-lived tokens instead of hardcoded credentials?",
+                options: ["IAM Database Authentication", "AWS Root Access Keys", "OAuth2 via Cognito", "Standard Basic HTTP Auth"],
+                answer: 0,
+                explain: "IAM Database Authentication generates short-lived auth tokens (valid for 15 minutes), removing the need to store passwords in code."
+            },
+            {
+                q: "Which of the following is an anti-pattern for using Amazon ElastiCache?",
+                options: ["Caching slow-changing data that is queried frequently.", "Caching web session tokens across stateless compute nodes.", "Caching rapidly changing data from a dataset where all keys are required equally.", "Caching complex query aggregate calculation results."],
+                answer: 2,
+                explain: "Caching rapidly changing data across a large key space provides low cache hit rates and high cache churn, making it an anti-pattern."
+            },
+            {
+                q: "What is the primary role of an Amazon RDS Multi-AZ deployment?",
+                options: ["Horizontal read throughput scaling", "High availability and disaster recovery", "Reducing network data transfer costs across regions", "Database schema migration"],
+                answer: 1,
+                explain: "Multi-AZ is designed for high availability and automated disaster recovery, providing synchronous standby replication."
+            },
+            {
+                q: "An application requires an Aurora DB cluster to automatically handle spikes in read traffic. Which scaling feature should be enabled?",
+                options: ["Aurora Read Replica Auto Scaling", "RDS Storage Auto Scaling", "Multi-Region Global Cluster Scaling", "Manual Snapshot Provisioning"],
+                answer: 0,
+                explain: "Aurora supports Read Replica Auto Scaling, which dynamically adds or removes read replicas in response to CPU or connection metrics."
+            },
+            {
+                q: "What is the minimum requirement for Aurora to process read operations successfully from its storage nodes?",
+                options: ["1 out of 6 copies", "2 out of 6 copies", "3 out of 6 copies", "5 out of 6 copies"],
+                answer: 2,
+                explain: "Aurora requires a read quorum of 3 out of 6 storage copies across 3 AZs."
+            },
+            {
+                q: "A developer wants to log database SQL queries for compliance auditing on an RDS MySQL database. Where can these logs be exported for long-term retention?",
+                options: ["Amazon CloudWatch Logs", "Amazon ElastiCache Redis Keys", "RDS Local Storage Root Folder", "AWS Config History"],
+                answer: 0,
+                explain: "RDS Audit Logs can be published directly to CloudWatch Logs for analysis and long-term retention."
+            },
+            {
+                q: "How does Write-Through caching impact write performance?",
+                options: ["It improves write speed by delaying writes to disk.", "It introduces a write latency penalty because every update involves two writes (DB and Cache).", "It bypasses the database completely on write operations.", "It reduces CPU usage on the application node."],
+                answer: 1,
+                explain: "Write-Through caching incurs a write penalty because each data update requires sequential or parallel write calls to both the DB and cache."
+            },
+            {
+                q: "What is the minimum time interval required between storage scaling modifications on an RDS instance?",
+                options: ["1 hour", "6 hours", "12 hours", "24 hours"],
+                answer: 1,
+                explain: "RDS Storage Auto Scaling requires at least 6 hours to have passed since the previous storage modification."
+            },
+            {
+                q: "Which feature in RDS Proxy helps protect database access credentials?",
+                options: ["Integration with AWS Secrets Manager", "Local XML credential encryption", "Key Pair authentication over SSH", "IAM S3 Gateway endpoints"],
+                answer: 0,
+                explain: "RDS Proxy securely retrieves database authentication credentials from AWS Secrets Manager."
+            },
+            {
+                q: "In an Aurora DB cluster, what happens if the primary master instance fails?",
+                options: ["The database becomes permanently unavailable until restored from S3.", "Aurora automatically promotes one of the Read Replicas to become the new primary master.", "The database converts to an EC2 instance.", "Aurora deletes the cluster and recreates it."],
+                answer: 1,
+                explain: "If the master fails, Aurora automatically promotes an existing Read Replica to the primary master within seconds."
+            },
+            {
+                q: "What is the default behavior when an item in ElastiCache reaches its Time-To-Live (TTL)?",
+                options: ["It is automatically written to RDS.", "It expires and is removed from the cache.", "It triggers a Lambda function to reload the item.", "It converts into a persistent snapshot."],
+                answer: 1,
+                explain: "When a cached item reaches its TTL duration, it expires and becomes eligible for removal from memory."
+            },
+            {
+                q: "Which database engine is NOT supported natively by Amazon RDS?",
+                options: ["PostgreSQL", "Apache Cassandra", "MariaDB", "IBM DB2"],
+                answer: 1,
+                explain: "Amazon RDS supports Postgres, MySQL, MariaDB, Oracle, SQL Server, IBM DB2, and Aurora. Apache Cassandra is supported via Amazon Keyspaces."
+            },
+            {
+                q: "When creating an encrypted RDS database, which service manages the encryption keys?",
+                options: ["AWS KMS (Key Management Service)", "AWS Certificate Manager", "AWS Secrets Manager", "AWS CloudHSM only"],
+                answer: 0,
+                explain: "RDS uses AWS KMS (Key Management Service) keys to encrypt databases at rest."
+            },
+            {
+                q: "What network data transfer fee applies to RDS Read Replicas residing within the SAME Availability Zone or Region?",
+                options: ["Standard internet rate", "Same-Region replication traffic is free", "$0.10 per GB transferred", "Cross-zone fee applies"],
+                answer: 1,
+                explain: "Replication traffic for RDS Read Replicas located within the same AWS Region is free of charge."
+            },
+            {
+                q: "Which command category is supported on RDS Read Replicas?",
+                options: ["DDL schema updates", "Read-only SELECT queries", "INSERT statements", "DELETE statements"],
+                answer: 1,
+                explain: "Read replicas are optimized exclusively for read operations (SELECT statements)."
+            },
+            {
+                q: "What strategy can prevent serving stale data when using Lazy Loading in ElastiCache?",
+                options: ["Configure an appropriate Time-To-Live (TTL) on cache keys.", "Disable read replicas.", "Use single-node Memcached clusters.", "Enable RDS Storage Auto Scaling."],
+                answer: 0,
+                explain: "Setting an appropriate TTL ensures that stale items expire after a predetermined time, forcing the app to fetch fresh data from the DB."
+            },
+            {
+                q: "What is the typical replica lag time in an Amazon Aurora cluster?",
+                options: ["Several minutes", "Sub-10 milliseconds", "1 to 2 hours", "Over 30 seconds"],
+                answer: 1,
+                explain: "Amazon Aurora's shared storage engine allows Read Replicas to experience sub-10 millisecond replication lag."
+            },
+            {
+                q: "Which ElastiCache engine features multi-threaded hardware utilization?",
+                options: ["Memcached", "Redis", "Aurora In-Memory", "RDS Proxy Caching"],
+                answer: 0,
+                explain: "ElastiCache for Memcached features a multi-threaded architecture capable of scaling across multiple CPU cores."
+            },
+            {
+                q: "Which AWS service provides a fully managed proxy layer that reduces connection overhead on database CPU and memory resources?",
+                options: ["Amazon RDS Proxy", "AWS Direct Connect", "Amazon API Gateway", "Application Load Balancer"],
+                answer: 0,
+                explain: "Amazon RDS Proxy pools connections to prevent memory/CPU overload on relational database instances."
+            },
+            {
+                q: "What capability does Amazon Aurora Backtrack provide?",
+                options: ["It restores database records to a point in time without restoring from a full backup snapshot.", "It backs up data to local EC2 drives.", "It syncs Aurora tables directly to DynamoDB.", "It migrates Aurora instances across AWS accounts automatically."],
+                answer: 0,
+                explain: "Aurora Backtrack allows you to rapidly rewind a database cluster to a prior point in time without executing a full snapshot restore."
+            }
+        ];
+
+        let currentQuizQuestions = [];
+        let userAnswers = {};
+
+        function switchTab(tab) {
+            const studySec = document.getElementById('section-study');
+            const quizSec = document.getElementById('section-quiz');
+            const tabStudy = document.getElementById('tab-study');
+            const tabQuiz = document.getElementById('tab-quiz');
+
+            if (tab === 'study') {
+                studySec.classList.remove('hidden');
+                quizSec.classList.add('hidden');
+                tabStudy.className = "px-4 py-2 rounded-lg font-medium bg-amber-500 text-slate-900 hover:bg-amber-400 transition";
+                tabQuiz.className = "px-4 py-2 rounded-lg font-medium bg-slate-700 text-slate-300 hover:bg-slate-600 transition";
+            } else {
+                studySec.classList.add('hidden');
+                quizSec.classList.remove('hidden');
+                tabQuiz.className = "px-4 py-2 rounded-lg font-medium bg-amber-500 text-slate-900 hover:bg-amber-400 transition";
+                tabStudy.className = "px-4 py-2 rounded-lg font-medium bg-slate-700 text-slate-300 hover:bg-slate-600 transition";
+                if (currentQuizQuestions.length === 0) {
+                    startNewQuiz();
+                }
+            }
+        }
+
+        function startNewQuiz() {
+            // Select 10 random questions from bank
+            const shuffled = [...questionBank].sort(() => 0.5 - Math.random());
+            currentQuizQuestions = shuffled.slice(0, 10);
+            userAnswers = {};
+
+            document.getElementById('quiz-results').classList.add('hidden');
+            renderQuiz();
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            currentQuizQuestions.forEach((qObj, index) => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4";
+                
+                let optionsHTML = '';
+                qObj.options.forEach((opt, oIdx) => {
+                    optionsHTML += `
+                        <label class="flex items-start space-x-3 p-3 rounded-lg bg-slate-900/50 hover:bg-slate-900 cursor-pointer border border-slate-700 transition">
+                            <input type="radio" name="question-${index}" value="${oIdx}" onchange="selectOption(${index}, ${oIdx})" class="mt-1 text-amber-500 focus:ring-amber-400">
+                            <span class="text-slate-200 text-sm">${opt}</span>
+                        </label>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-4">
+                        <span class="px-3 py-1 bg-amber-500/10 text-amber-400 text-xs font-bold rounded-full border border-amber-500/20">Question ${index + 1} of 10</span>
+                    </div>
+                    <h3 class="text-base font-semibold text-white leading-relaxed">${qObj.q}</h3>
+                    <div class="space-y-2">${optionsHTML}</div>
+                    <div id="explanation-${index}" class="hidden p-4 rounded-lg bg-slate-900 text-sm space-y-1"></div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Add Submit Button
+            const submitBtn = document.createElement('button');
+            submitBtn.className = "w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold rounded-xl text-lg transition shadow-lg";
+            submitBtn.innerText = "Submit Practice Quiz";
+            submitBtn.onclick = evaluateQuiz;
+            container.appendChild(submitBtn);
+        }
+
+        function selectOption(qIndex, optIndex) {
+            userAnswers[qIndex] = optIndex;
+        }
+
+        function evaluateQuiz() {
+            let score = 0;
+
+            currentQuizQuestions.forEach((qObj, index) => {
+                const selected = userAnswers[index];
+                const expDiv = document.getElementById(`explanation-${index}`);
+                expDiv.classList.remove('hidden');
+
+                if (selected === qObj.answer) {
+                    score++;
+                    expDiv.className = "p-4 rounded-lg bg-emerald-950/50 border border-emerald-500/30 text-emerald-200 text-sm space-y-1";
+                    expDiv.innerHTML = `<strong><i class="fa-solid fa-circle-check mr-2"></i>Correct!</strong> ${qObj.explain}`;
+                } else {
+                    expDiv.className = "p-4 rounded-lg bg-rose-950/50 border border-rose-500/30 text-rose-200 text-sm space-y-1";
+                    expDiv.innerHTML = `<strong><i class="fa-solid fa-circle-xmark mr-2"></i>Incorrect.</strong> Correct Answer: <em>${qObj.options[qObj.answer]}</em>.<br><span class="text-slate-300 mt-1 block">${qObj.explain}</span>`;
+                }
+            });
+
+            // Display Results Summary
+            const resultsDiv = document.getElementById('quiz-results');
+            const scoreDisplay = document.getElementById('score-display');
+            const scoreFeedback = document.getElementById('score-feedback');
+
+            scoreDisplay.innerText = `${score} / 10 (${score * 10}%)`;
+            if (score >= 8) {
+                scoreFeedback.innerText = "Great job! You demonstrate strong AWS Developer database knowledge.";
+            } else if (score >= 6) {
+                scoreFeedback.innerText = "Good effort! Review the notes above to strengthen weak areas.";
+            } else {
+                scoreFeedback.innerText = "Keep practicing! Review the study notes and attempt another quiz.";
+            }
+
+            resultsDiv.classList.remove('hidden');
+            window.scrollTo({ top: resultsDiv.offsetTop - 100, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
